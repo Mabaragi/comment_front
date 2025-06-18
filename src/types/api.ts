@@ -1,6 +1,6 @@
 export type EpisodeQueryParams = {
-  seriesId: number;
+  seriesId: string;
   limit?: number;
   offset?: number;
-  fields?: string[];
+  fields?: string;
 };

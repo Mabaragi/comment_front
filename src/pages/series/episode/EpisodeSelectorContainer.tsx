@@ -2,14 +2,14 @@ import EpisodeSelector from './EpisodeSelector';
 import { useEpisodeList } from '../../../hooks/useEpisode';
 
 type Props = {
-  seriesId: number;
+  seriesId: string;
 };
 
 export default function EpisodeSelectorContainer({ seriesId }: Props) {
   const { data } = useEpisodeList({
     seriesId,
     limit: 9999,
-    fields: ['id', 'name'],
+    fields: 'id,name',
   });
   const episodeNums =
     data?.results.map((episode) => ({ id: episode.id, name: episode.name })) ||

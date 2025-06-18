@@ -193,4 +193,11 @@ type NameMap = Record<'first' | 'last', string>;
 4. TypeScript의 내장 **유틸리티 타입**도 모두 제네릭으로 구현되어 있음
 
 제네릭을 적절히 활용하면 코드의 **유연성**, **안정성**, **재사용성**을 크게 높일 수 있습니다!
+
 # comment_front
+
+# 스키마 연동
+
+```
+npx openapi-typescript-codegen --input http://localhost:8000/swagger/?format=openapi --output src/api --client axios
+```

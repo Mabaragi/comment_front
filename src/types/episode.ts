@@ -10,7 +10,14 @@ export interface Episode {
 
 export interface EpisodeListResponse {
   count: number;
-  next: string | null;
-  previous: string | null;
+  next?: string | null;
+  previous?: string | null;
   results: Episode[];
+}
+
+export interface EpisodeQueryParams {
+  seriesId: string;
+  limit?: number;
+  offset?: number;
+  fields?: string;
 }
