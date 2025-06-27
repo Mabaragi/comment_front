@@ -201,3 +201,11 @@ type NameMap = Record<'first' | 'last', string>;
 ```
 npx openapi-typescript-codegen --input http://localhost:8000/swagger/?format=openapi --output src/api --client axios
 ```
+
+###
+
+일일히 swagger 문서를 보면서 api를 연동해야하는 불편함 > open api로 변경
+
+유요한 필드만을 지정 하는 api 함수 필요 > django 뷰를 fields 입력받을수 있게 변경
+
+무한스크롤 기능 > django에서 ListAPI View 활용

@@ -4,7 +4,6 @@ import type { EpisodeQueryParams } from '../types/api'; // 에피소드 쿼리 �
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { CrawlerService } from '../api/services/CrawlerService';
 import { apiGetEpisodesByUrl } from '@/api/custom';
-import type { Episode } from '../api/models/Episode';
 
 export function useEpisodeList({
   seriesId,
