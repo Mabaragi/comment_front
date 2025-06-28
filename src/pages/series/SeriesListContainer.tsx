@@ -1,7 +1,8 @@
-import { useCrawlerSeriesList } from '@/api/generated';
+// import { useCrawlerSeriesList } from '@/api/generated';
+import { useSeriesList } from '@/hooks/useCrawler';
 import SeriesList from './SeriesList';
 export default function SeriesListContainer() {
-  const { data: series, isLoading, isError, error } = useCrawlerSeriesList();
+  const { data: series, isLoading, isError, error } = useSeriesList();
   console.log(import.meta.env.VITE_BACKEND_URL);
 
   if (isLoading) {

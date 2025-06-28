@@ -1,7 +1,8 @@
 import SeriesDetail from './SeriesDetail';
 import { useParams } from 'react-router-dom';
 import { useEpisodeInfiniteList } from '../../hooks/useEpisode';
-import { useCrawlerSeriesRead } from '@/api/generated';
+// import { useCrawlerSeriesRead } from '@/api/generated';
+import { useSeries } from '@/hooks/useCrawler';
 import { useRef, useEffect } from 'react';
 
 export default function SeriesDetailContainer() {
@@ -12,7 +13,7 @@ export default function SeriesDetailContainer() {
     data: series,
     isLoading: isSeriesLoading,
     isError: isSeriesError,
-  } = useCrawlerSeriesRead(seriesIdString);
+  } = useSeries(seriesIdString);
   const {
     data: episodeQueryResponse,
     fetchNextPage,

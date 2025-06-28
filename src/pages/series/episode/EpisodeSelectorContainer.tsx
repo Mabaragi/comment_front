@@ -1,12 +1,13 @@
-import EpisodeSelector from './EpisodeSelector';
-import { useCrawlerSeriesEpisodeList } from '@/api/generated';
+import EpisodeSelector from '../../../components/EpisodeSelector';
+// import { useCrawlerSeriesEpisodeList } from '@/api/generated';
+import { useSeriesEpisodeList } from '@/hooks/useCrawler';
 
 type Props = {
   seriesId: number;
 };
 
 export default function EpisodeSelectorContainer({ seriesId }: Props) {
-  const { data } = useCrawlerSeriesEpisodeList(seriesId.toString(), {
+  const { data } = useSeriesEpisodeList(seriesId.toString(), {
     limit: 9999,
   });
   const episodeNums =

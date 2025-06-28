@@ -1,7 +1,7 @@
 // src/hooks/useLogin.ts
 import { useMutation } from '@tanstack/react-query';
 import { useAuthStore } from '@/stores/authStore';
-import { tokenCreate } from '@/api/generated';
+import { tokenCreate } from '@/api/endpoints';
 
 export const useLogin = () => {
   const setTokens = useAuthStore((state) => state.setTokens);

@@ -1,4 +1,4 @@
-import { axiosInstance } from '.';
+import { axiosInstance } from './axiosInstance';
 
 export const apiGetEpisodesByUrl = (url: string) => {
   return axiosInstance({

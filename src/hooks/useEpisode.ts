@@ -1,8 +1,8 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { axiosInstance } from '@/api';
-import type { CrawlerSeriesEpisodeList200 } from '@/api/generated.schemas';
-import { crawlerSeriesEpisodeList } from '@/api/generated';
-import type { CrawlerSeriesListParams } from '@/api/generated.schemas';
+import { axiosInstance } from '@/api/axiosInstance';
+import type { CrawlerSeriesEpisodeList200 } from '@/api/schemas';
+import { crawlerSeriesEpisodeList } from '@/api/endpoints';
+import type { CrawlerSeriesListParams } from '@/api/schemas';
 
 export function useEpisodeInfiniteList(
   seriesId: string,

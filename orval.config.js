@@ -1,12 +1,12 @@
 export const crawler = {
   output: {
     mode: 'split',
-    target: './src/api/generated.ts',
+    target: 'src/api/endpoints.ts',
+    schemas: 'src/api/schemas',
     client: 'react-query',
-    baseUrl: 'http://localhost:8000',
     override: {
       mutator: {
-        path: './src/api/index.ts',
+        path: './src/api/axiosInstance.ts',
         name: 'axiosInstance',
       },
     },
