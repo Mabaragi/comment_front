@@ -173,3 +173,5 @@ storybook-static/
 
 # Local development
 *.local
+
+*storybook.log

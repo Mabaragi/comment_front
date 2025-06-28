@@ -76,6 +76,8 @@ export default function SeriesDetailContainer() {
       series={series}
       episodes={episodes}
       observerRef={loadMoreRef}
+      isSeriesLoading={isSeriesLoading}
+      isEpisodeLoading={isEpisodeLoading}
     />
   );
 }

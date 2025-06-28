@@ -8,7 +8,7 @@ import Layout from './pages/Layout';
 import MainPage from './pages/main/MainPage';
 import SeriesListContainer from './pages/series/SeriesListContainer';
 import SeriesDetailContainer from './pages/series/SeriesDetailContainer';
-import EpisodeContainer from './components/EpisodeListContainer';
+import EpisodeDetailContainer from './pages/series/episode/EpisodeDetailContainer';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,7 +44,7 @@ function App() {
               />
               <Route
                 path="series/:seriesId/episode/:episodeId"
-                element={<EpisodeContainer />}
+                element={<EpisodeDetailContainer />}
               />
             </Route>
             {/* 시리즈 상세 페이지 */}
