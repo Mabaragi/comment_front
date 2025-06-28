@@ -5,7 +5,7 @@ interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   setTokens: (access: string, refresh: string) => void;
-  resetTokens: () => void;
+  clearTokens: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -13,5 +13,5 @@ export const useAuthStore = create<AuthState>((set) => ({
   refreshToken: null,
   setTokens: (access, refresh) =>
     set({ accessToken: access, refreshToken: refresh }),
-  resetTokens: () => set({ accessToken: null, refreshToken: null }),
+  clearTokens: () => set({ accessToken: null, refreshToken: null }),
 }));

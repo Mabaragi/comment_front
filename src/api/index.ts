@@ -1,22 +1,59 @@
-/* generated using openapi-typescript-codegen -- do not edit */
-/* istanbul ignore file */
-/* tslint:disable */
-/* eslint-disable */
-export { ApiError } from './core/ApiError';
-export { CancelablePromise, CancelError } from './core/CancelablePromise';
-export { OpenAPI } from './core/OpenAPI';
-export type { OpenAPIConfig } from './core/OpenAPI';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { useAuthStore } from '../stores/authStore';
 
-export type { Comment } from './models/Comment';
-export type { CustomTokenObtainPair } from './models/CustomTokenObtainPair';
-export type { CustomUser } from './models/CustomUser';
-export type { Episode } from './models/Episode';
-export type { EpisodeCreateResponse } from './models/EpisodeCreateResponse';
-export type { Series } from './models/Series';
-export type { SeriesCreate } from './models/SeriesCreate';
-export type { TokenObtainPair } from './models/TokenObtainPair';
-export type { TokenRefresh } from './models/TokenRefresh';
+/**
+ * Orval의 custom mutator 함수
+ */
+export const axiosInstance = async <T = any>(
+  config: AxiosRequestConfig,
+): Promise<T> => {
+  const accessToken = useAuthStore.getState().accessToken;
 
-export { CrawlerService } from './services/CrawlerService';
-export { TokenService } from './services/TokenService';
-export { UserService } from './services/UserService';
+  // 요청 헤더에 accessToken 주입
+  if (accessToken) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${accessToken}`,
+    };
+  }
+
+  try {
+    const response = await axios<T>(config);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    const originalRequest = config as AxiosRequestConfig & { _retry?: boolean };
+
+    // accessToken 만료 시 refresh 시도
+    if (axiosError.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      const refreshToken = useAuthStore.getState().refreshToken;
+      if (refreshToken) {
+        try {
+          const refreshResponse = await axios.post(
+            'http://localhost:8000/token/refresh/',
+            { refresh: refreshToken },
+          );
+
+          const newAccessToken = refreshResponse.data.access;
+          useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+
+          // 재요청 시 Authorization 헤더 갱신
+          originalRequest.headers = {
+            ...originalRequest.headers,
+            Authorization: `Bearer ${newAccessToken}`,
+          };
+
+          const retryResponse = await axios<T>(originalRequest);
+          return retryResponse.data;
+        } catch (refreshError) {
+          useAuthStore.getState().clearTokens();
+          return Promise.reject(refreshError);
+        }
+      }
+    }
+
+    return Promise.reject(error);
+  }
+};

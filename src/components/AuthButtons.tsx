@@ -5,7 +5,7 @@ import { useLogin } from '../hooks/useAuth';
 import type { LoginCredentials } from '../types/auth';
 
 export default function AuthButtons() {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn); // 구독으로 상태 가져오기
+  const isLoggedIn = useAuthStore((state) => state.refreshToken); // 구독으로 상태 가져오기
   const mutation = useLogin();
   const isPending = mutation.isPending;
 
@@ -18,7 +18,6 @@ export default function AuthButtons() {
 
   return (
     <div className="flex items-center gap-2">
-      <span>{isLoggedIn}</span>
       {isLoggedIn ? (
         <AuthButton label="로그아웃" onClick={handleLogout}>
           로그아웃

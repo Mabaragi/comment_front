@@ -1,25 +1,25 @@
 import SeriesDetail from './SeriesDetail';
 import { useParams } from 'react-router-dom';
 import { useEpisodeInfiniteList } from '../../hooks/useEpisode';
-import { useSeries } from '../../hooks/useSeries';
+import { useCrawlerSeriesRead } from '@/api/generated';
 import { useRef, useEffect } from 'react';
 
 export default function SeriesDetailContainer() {
-  const { seriesId } = useParams();
-  const seriesIdNumber = seriesId ? Number(seriesId) : undefined;
+  const { seriesId: seriesIdString } = useParams() as { seriesId: string };
+  // const seriesId = parseInt(seriesIdString);
 
   const {
     data: series,
     isLoading: isSeriesLoading,
     isError: isSeriesError,
-  } = useSeries(seriesIdNumber ?? 0);
+  } = useCrawlerSeriesRead(seriesIdString);
   const {
     data: episodeQueryResponse,
     fetchNextPage,
     hasNextPage,
     isLoading: isEpisodeLoading,
     isError: isEpisodeError,
-  } = useEpisodeInfiniteList(seriesIdNumber ?? 0);
+  } = useEpisodeInfiniteList(seriesIdString);
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null); // ✅ DOM 요소를 위한 ref
 

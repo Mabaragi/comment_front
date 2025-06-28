@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/select';
 
 type Props = {
-  seriesId: string;
+  seriesId: number;
   episodeNums: { id: number; name: string }[];
 };
 

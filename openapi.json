@@ -1,0 +1,693 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API Documentation",
+    "description": "API for my project",
+    "termsOfService": "https://www.google.com/policies/terms/",
+    "contact": { "email": "support@example.com" },
+    "license": { "name": "BSD License" },
+    "version": "v1"
+  },
+  "host": "localhost:8000",
+  "schemes": ["http"],
+  "basePath": "/",
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "Bearer": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header",
+      "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
+    }
+  },
+  "security": [{ "Bearer": [] }],
+  "paths": {
+    "/crawler/episode/{product_id}/": {
+      "get": {
+        "operationId": "crawler_episode_read",
+        "description": "특정 시리즈의 에피소드를 조회합니다.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "조회할 에피소드의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61823562"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/Episode" }
+          },
+          "404": { "description": "Not Found" }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/crawler/episode/{product_id}/comment": {
+      "get": {
+        "operationId": "crawler_episode_comment_list",
+        "description": "에피소드 댓글 목록을 조회하는 API 뷰입니다.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "댓글이 속한 에피소드의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61823562"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": ["count", "results"],
+              "type": "object",
+              "properties": {
+                "count": { "type": "integer" },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Comment" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/crawler/series/": {
+      "get": {
+        "operationId": "crawler_series_list",
+        "description": "Retrieve a list of series",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/Series" }
+            }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": []
+    },
+    "/crawler/series/crawl/": {
+      "post": {
+        "operationId": "crawler_series_crawl_create",
+        "description": "Create a series",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/SeriesCreate" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/Series" }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": []
+    },
+    "/crawler/series/{series_id}/": {
+      "get": {
+        "operationId": "crawler_series_read",
+        "description": "Retrieve a series by ID",
+        "parameters": [
+          {
+            "name": "series_id",
+            "in": "path",
+            "description": "조회할 시리즈의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61822163"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/Series" }
+          },
+          "404": { "description": "Not Found" }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "series_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/crawler/series/{series_id}/episode/": {
+      "get": {
+        "operationId": "crawler_series_episode_list",
+        "description": "에피소드 목록을 조회하는 API 뷰입니다.",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of results to return per page.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "The initial index from which to return the results.",
+            "required": false,
+            "type": "integer"
+          },
+          {
+            "name": "fields",
+            "in": "query",
+            "description": "불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "series_id",
+            "in": "path",
+            "description": "에피소드가 속한 시리즈의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61822163"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "required": ["count", "results"],
+              "type": "object",
+              "properties": {
+                "count": { "type": "integer" },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": { "$ref": "#/definitions/Episode" }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "series_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/crawler/series/{series_id}/episode/crawl": {
+      "post": {
+        "operationId": "crawler_series_episode_crawl_create",
+        "description": "에피소드를 크롤링하여 db에 저장합니다.",
+        "parameters": [],
+        "responses": {
+          "207": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/EpisodeCreateResponse" }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "series_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/llm/api/emotion-analysis/{comment_id}/": {
+      "get": {
+        "operationId": "llm_api_emotion-analysis_read",
+        "description": "댓글 감정 분석 결과 조회",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "조회할 댓글의 ID",
+            "required": true,
+            "type": "integer",
+            "default": 165999266
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/CommentEmotionAnalysis" }
+          },
+          "404": { "description": "Not Found" }
+        },
+        "tags": ["llm"]
+      },
+      "post": {
+        "operationId": "llm_api_emotion-analysis_create",
+        "description": "댓글 감정 분석 요청",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "분석할 댓글의 ID",
+            "required": true,
+            "type": "integer",
+            "default": 165999266
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/CommentEmotionAnalysis" }
+          },
+          "400": { "description": "Bad Request" }
+        },
+        "tags": ["llm"]
+      },
+      "parameters": [
+        {
+          "name": "comment_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/llm/api/emotion-analysis/{comment_id}/delete/": {
+      "delete": {
+        "operationId": "llm_api_emotion-analysis_delete_delete",
+        "description": "댓글 감정 분석 결과 삭제",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "삭제할 댓글의 ID",
+            "required": true,
+            "type": "integer",
+            "default": 165999266
+          }
+        ],
+        "responses": {
+          "204": { "description": "삭제 성공 (No Content)" },
+          "404": { "description": "Not Found" }
+        },
+        "tags": ["llm"]
+      },
+      "parameters": [
+        {
+          "name": "comment_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/llm/api/summary-analysis/{episode_id}/": {
+      "post": {
+        "operationId": "llm_api_summary-analysis_create",
+        "description": "Create a summary of comment emotion analysis results.",
+        "parameters": [],
+        "responses": { "201": { "description": "" } },
+        "tags": ["llm"]
+      },
+      "parameters": [
+        {
+          "name": "episode_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/token/": {
+      "post": {
+        "operationId": "token_create",
+        "description": "로그인 후 access/refresh 토큰 반환",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/TokenObtainPair" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/CustomTokenObtainPair" }
+          }
+        },
+        "tags": ["token"]
+      },
+      "parameters": []
+    },
+    "/token/refresh/": {
+      "post": {
+        "operationId": "token_refresh_create",
+        "description": "Takes a refresh type JSON web token and returns an access type JSON web\ntoken if the refresh token is valid.",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": { "$ref": "#/definitions/TokenRefresh" }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/TokenRefresh" }
+          }
+        },
+        "tags": ["token"]
+      },
+      "parameters": []
+    },
+    "/user/": {
+      "get": {
+        "operationId": "user_list",
+        "description": "Retrieve a list of users",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": { "$ref": "#/definitions/CustomUser" }
+            }
+          }
+        },
+        "tags": ["user"]
+      },
+      "parameters": []
+    }
+  },
+  "definitions": {
+    "Episode": {
+      "required": [
+        "id",
+        "name",
+        "image_src",
+        "category",
+        "subcategory",
+        "series",
+        "user"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648
+        },
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "image_src": { "title": "Image src", "type": "string", "minLength": 1 },
+        "category": {
+          "title": "Category",
+          "type": "string",
+          "maxLength": 10,
+          "minLength": 1
+        },
+        "subcategory": {
+          "title": "Subcategory",
+          "type": "string",
+          "maxLength": 20,
+          "minLength": 1
+        },
+        "series": { "title": "Series", "type": "integer" },
+        "user": { "title": "User", "type": "integer" }
+      }
+    },
+    "Comment": {
+      "required": [
+        "id",
+        "content",
+        "created_at",
+        "is_best",
+        "user_name",
+        "user_thumbnail_url",
+        "user_uid",
+        "series",
+        "episode"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648
+        },
+        "content": { "title": "Content", "type": "string", "minLength": 1 },
+        "created_at": {
+          "title": "Created at",
+          "type": "string",
+          "format": "date-time"
+        },
+        "is_best": { "title": "Is best", "type": "boolean" },
+        "user_name": {
+          "title": "User name",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "user_thumbnail_url": {
+          "title": "User thumbnail url",
+          "type": "string",
+          "minLength": 1
+        },
+        "user_uid": {
+          "title": "User uid",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648
+        },
+        "series": { "title": "Series", "type": "integer" },
+        "episode": { "title": "Episode", "type": "integer" }
+      }
+    },
+    "Series": {
+      "required": ["id", "title", "image_src", "user"],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648
+        },
+        "title": {
+          "title": "Title",
+          "type": "string",
+          "maxLength": 100,
+          "minLength": 1
+        },
+        "image_src": { "title": "Image src", "type": "string", "minLength": 1 },
+        "user": { "title": "User", "type": "integer" }
+      }
+    },
+    "SeriesCreate": {
+      "required": ["id"],
+      "type": "object",
+      "properties": { "id": { "title": "Id", "type": "integer" } }
+    },
+    "EpisodeCreateResponse": {
+      "required": ["created_data", "errors_items"],
+      "type": "object",
+      "properties": {
+        "created_data": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Episode" }
+        },
+        "errors_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": { "type": "string", "x-nullable": true }
+          }
+        }
+      }
+    },
+    "CommentEmotionAnalysis": {
+      "required": ["comment"],
+      "type": "object",
+      "properties": {
+        "id": { "title": "ID", "type": "integer", "readOnly": true },
+        "content": {
+          "title": "Content",
+          "type": "string",
+          "readOnly": true,
+          "minLength": 1
+        },
+        "sentiment": {
+          "title": "Sentiment",
+          "type": "string",
+          "readOnly": true,
+          "minLength": 1
+        },
+        "created_at": {
+          "title": "Created at",
+          "type": "string",
+          "format": "date-time",
+          "readOnly": true
+        },
+        "comment": { "title": "Comment", "type": "integer" }
+      }
+    },
+    "TokenObtainPair": {
+      "required": ["username", "password"],
+      "type": "object",
+      "properties": {
+        "username": { "title": "Username", "type": "string", "minLength": 1 },
+        "password": { "title": "Password", "type": "string", "minLength": 1 }
+      }
+    },
+    "CustomTokenObtainPair": {
+      "required": ["access", "refresh"],
+      "type": "object",
+      "properties": {
+        "access": { "title": "Access", "type": "string", "minLength": 1 },
+        "refresh": { "title": "Refresh", "type": "string", "minLength": 1 }
+      }
+    },
+    "TokenRefresh": {
+      "required": ["refresh"],
+      "type": "object",
+      "properties": {
+        "refresh": { "title": "Refresh", "type": "string", "minLength": 1 },
+        "access": {
+          "title": "Access",
+          "type": "string",
+          "readOnly": true,
+          "minLength": 1
+        }
+      }
+    },
+    "CustomUser": {
+      "required": ["username", "name"],
+      "type": "object",
+      "properties": {
+        "username": {
+          "title": "Username",
+          "type": "string",
+          "maxLength": 15,
+          "minLength": 1
+        },
+        "email": {
+          "title": "Email address",
+          "type": "string",
+          "format": "email",
+          "maxLength": 254
+        },
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "maxLength": 30,
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

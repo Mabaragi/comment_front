@@ -1,15 +1,13 @@
 import EpisodeSelector from './EpisodeSelector';
-import { useEpisodeList } from '../../../hooks/useEpisode';
+import { useCrawlerSeriesEpisodeList } from '@/api/generated';
 
 type Props = {
-  seriesId: string;
+  seriesId: number;
 };
 
 export default function EpisodeSelectorContainer({ seriesId }: Props) {
-  const { data } = useEpisodeList({
-    seriesId,
+  const { data } = useCrawlerSeriesEpisodeList(seriesId.toString(), {
     limit: 9999,
-    fields: 'id,name',
   });
   const episodeNums =
     data?.results.map((episode) => ({ id: episode.id, name: episode.name })) ||
@@ -17,5 +15,5 @@ export default function EpisodeSelectorContainer({ seriesId }: Props) {
   if (!episodeNums) {
     return <p>에피소드가 없습니다.</p>;
   }
-  return <EpisodeSelector episodeNums={episodeNums} seriesId={seriesId} />; // 예시 데이터
+  return <EpisodeSelector episodeNums={episodeNums} seriesId={seriesId} />;
 }

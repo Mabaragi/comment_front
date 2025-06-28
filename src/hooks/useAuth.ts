@@ -1,15 +1,13 @@
 // src/hooks/useLogin.ts
 import { useMutation } from '@tanstack/react-query';
-import { TokenService } from '@/api/services/TokenService';
 import { useAuthStore } from '@/stores/authStore';
-import type { TokenObtainPair } from '@/api/models/TokenObtainPair';
+import { tokenCreate } from '@/api/generated';
 
 export const useLogin = () => {
   const setTokens = useAuthStore((state) => state.setTokens);
 
   return useMutation({
-    mutationFn: (credentials: TokenObtainPair) =>
-      TokenService.tokenCreate(credentials),
+    mutationFn: tokenCreate,
     onSuccess: (data) => {
       setTokens(data.access, data.refresh);
     },

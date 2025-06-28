@@ -1,13 +1,16 @@
 import { PlusIcon, EllipsisVerticalIcon } from '@heroicons/react/24/outline';
-import { useAddSeries } from '../hooks/useSeries';
+import { useCrawlerSeriesCrawlCreate } from '@/api/generated';
+import { SeriesCreate } from '@/api/generated.schemas';
 
 export default function HeaderActionButtons() {
-  const { mutateAsync: addSeriesAsync } = useAddSeries();
-  const handleAddSeries = async (seriesId: number) => {
+  const mutation = useCrawlerSeriesCrawlCreate();
+
+  const handleCrawl = async (variables: { data: SeriesCreate }) => {
     try {
-      await addSeriesAsync(seriesId);
+      await mutation.mutateAsync(variables);
+      console.log('크롤링 성공!');
     } catch (error) {
-      console.error('Error adding series:', error);
+      console.error('크롤링 실패:', error);
     }
   };
 
@@ -17,10 +20,24 @@ export default function HeaderActionButtons() {
         className="bg-yellow-100 py-2 px-2 rounded hover:bg-yellow-300 transition duration-300 ease-in-out"
         title="새 항목 추가"
         aria-label="새 항목 추가"
-        onClick={() => handleAddSeries(56611441)} // 예시로 56611441 사용
+        onClick={() => null}
       >
         <PlusIcon className="h-6 w-6 inline-block" />
       </button>
+      <button
+        className="bg-yellow-100 py-2 px-2 rounded hover:bg-yellow-300 transition duration-300 ease-in-out disabled:opacity-50"
+        title="크롤링 시작"
+        aria-label="크롤링 시작"
+        onClick={() => handleCrawl({ data: { id: 1 } })}
+        disabled={mutation.isPending}
+      >
+        {mutation.isPending ? '크롤링 중...' : '크롤링 시작'}
+      </button>
+      {mutation.isError && (
+        <div className="text-red-500">
+          크롤링 실패: {String(mutation.error)}
+        </div>
+      )}
       <button
         className="bg-yellow-100 py-2 px-2 rounded hover:bg-yellow-300 transition duration-300 ease-in-out"
         title="더보기"
