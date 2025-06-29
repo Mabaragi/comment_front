@@ -5,6 +5,7 @@
  * API for my project
  * OpenAPI spec version: v1
  */
+import type { CommentEmoticon } from './commentEmoticon';
 
 export interface Comment {
   /**
@@ -16,6 +17,13 @@ export interface Comment {
   content: string;
   created_at: string;
   is_best: boolean;
+  /**
+   * @minimum -2147483648
+   * @maximum 2147483647
+   */
+  like_count?: number;
+  /** @nullable */
+  emoticon?: CommentEmoticon;
   /**
    * @minLength 1
    * @maxLength 100

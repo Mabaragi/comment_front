@@ -127,6 +127,37 @@
         }
       ]
     },
+    "/crawler/episode/{product_id}/comment/crawl": {
+      "post": {
+        "operationId": "crawler_episode_comment_crawl_create",
+        "description": "에피소드의 댓글을 크롤링하여 db에 저장합니다.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "댓글이 속한 에피소드의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61823562"
+          }
+        ],
+        "responses": {
+          "207": {
+            "description": "",
+            "schema": { "$ref": "#/definitions/EpisodeCreateResponse" }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
     "/crawler/series/": {
       "get": {
         "operationId": "crawler_series_list",
@@ -547,6 +578,17 @@
           "format": "date-time"
         },
         "is_best": { "title": "Is best", "type": "boolean" },
+        "like_count": {
+          "title": "Like count",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648
+        },
+        "emoticon": {
+          "title": "Emoticon",
+          "type": "object",
+          "x-nullable": true
+        },
         "user_name": {
           "title": "User name",
           "type": "string",
@@ -566,6 +608,23 @@
         },
         "series": { "title": "Series", "type": "integer" },
         "episode": { "title": "Episode", "type": "integer" }
+      }
+    },
+    "EpisodeCreateResponse": {
+      "required": ["created_data", "errors_items"],
+      "type": "object",
+      "properties": {
+        "created_data": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Episode" }
+        },
+        "errors_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": { "type": "string", "x-nullable": true }
+          }
+        }
       }
     },
     "Series": {
@@ -592,23 +651,6 @@
       "required": ["id"],
       "type": "object",
       "properties": { "id": { "title": "Id", "type": "integer" } }
-    },
-    "EpisodeCreateResponse": {
-      "required": ["created_data", "errors_items"],
-      "type": "object",
-      "properties": {
-        "created_data": {
-          "type": "array",
-          "items": { "$ref": "#/definitions/Episode" }
-        },
-        "errors_items": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": { "type": "string", "x-nullable": true }
-          }
-        }
-      }
     },
     "CommentEmotionAnalysis": {
       "required": ["comment"],

@@ -13,7 +13,7 @@ import EpisodeDetailContainer from './pages/series/episode/EpisodeDetailContaine
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 3 * 1000, // 데이터가 신선하다고 간주되는 시간 (3초)
+      staleTime: 30 * 1000, // 데이터가 신선하다고 간주되는 시간 (30초)
       gcTime: 3 * 1000, // 가비지 컬렉션 시간 (24시간)
       // gcTime: 24 * 60 * 60 * 1000, // 가비지 컬렉션 시간 (24시간)
 

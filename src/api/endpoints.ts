@@ -251,6 +251,66 @@ export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof c
 
 
 /**
+ * 에피소드의 댓글을 크롤링하여 db에 저장합니다.
+ */
+export const crawlerEpisodeCommentCrawlCreate = (
+    productId: string,
+ signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<EpisodeCreateResponse>(
+      {url: `/crawler/episode/${productId}/comment/crawl`, method: 'POST', signal
+    },
+      );
+    }
+  
+
+
+export const getCrawlerEpisodeCommentCrawlCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext> => {
+
+const mutationKey = ['crawlerEpisodeCommentCrawlCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, {productId: string}> = (props) => {
+          const {productId} = props ?? {};
+
+          return  crawlerEpisodeCommentCrawlCreate(productId,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrawlerEpisodeCommentCrawlCreateMutationResult = NonNullable<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>>
+    
+    export type CrawlerEpisodeCommentCrawlCreateMutationError = unknown
+
+    export const useCrawlerEpisodeCommentCrawlCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
+        TError,
+        {productId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getCrawlerEpisodeCommentCrawlCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
  * Retrieve a list of series
  */
 export const crawlerSeriesList = (

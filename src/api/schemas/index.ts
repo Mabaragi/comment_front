@@ -7,6 +7,7 @@
  */
 
 export * from './comment';
+export * from './commentEmoticon';
 export * from './commentEmotionAnalysis';
 export * from './crawlerEpisodeCommentList200';
 export * from './crawlerEpisodeCommentListParams';
