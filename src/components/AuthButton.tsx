@@ -15,7 +15,7 @@ export default function AuthButton({
   return (
     <button
       {...rest}
-      className={`bg-yellow-100 border border-yellow-300 px-3 py-2 rounded-full hover:bg-yellow-300 transition duration-300 ease-in-out ${className}`}
+      className={`bg-zinc-200 border border-zinc-400 px-3 py-2 rounded-full hover:bg-zinc-400 transition duration-300 ease-in-out ${className}`}
       title={label}
       aria-label={label}
     >

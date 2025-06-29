@@ -1,3 +1,5 @@
-export default function episodeDetailContainer() {
-  return <div>episodeDetailContainer</div>;
+import EpisodeDetail from './EpisodeDetail';
+
+export default function EpisodeDetailContainer() {
+  return <EpisodeDetail />;
 }

@@ -3,7 +3,7 @@ import AuthButtons from './AuthButtons';
 
 export default function Header() {
   return (
-    <header className="w-full from-yellow-100 to-yellow-200 shadow">
+    <header className="w-full bg-zinc-100">
       <div className="flex justify-between items-center w-full px-6">
         <div>
           <Link to="/main">

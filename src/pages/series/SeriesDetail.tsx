@@ -1,10 +1,10 @@
 import React from 'react';
 import type { Series } from '../../types/series';
 import type { Episode } from '../../types/episode';
-import { Link } from 'react-router-dom';
 import EpisodeSelectorContainer from './episode/EpisodeSelectorContainer';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import EpisodeCard from '@/components/EpisodeCard';
 
 type Props = {
   series: Series;
@@ -20,7 +20,7 @@ export default function SeriesDetail({
   isEpisodeLoading,
 }: Props) {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="p-6">
       <div className="flex flex-col justify-center sm:flex-row sm:items-center gap-8 mb-8">
         <img
           src={series.image_src}
@@ -36,27 +36,15 @@ export default function SeriesDetail({
       </div>
       <EpisodeSelectorContainer seriesId={series.id} />
       <h2 className="text-2xl font-semibold mb-4 mt-6">에피소드 목록</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0">
-        {episodes.map((ep) => (
-          <Link to={`/main/series/${series.id}/episode/${ep.id}`} key={ep.id}>
-            <Card className="flex flex-row items-center gap-4 p-3 border-b rounded-none transition-all duration-200 hover:bg-gray-100 hover:scale-[1.02] hover:shadow-md cursor-pointer">
-              <div className="flex-shrink-0">
-                <img
-                  src={ep.image_src}
-                  alt={ep.name}
-                  className="w-[56px] h-[84px] object-cover rounded"
-                  style={{ minWidth: 80, minHeight: 120 }}
-                />
-              </div>
-              <div className="flex-1 min-w-0">
-                <CardTitle className="text-base font-semibold mb-1 truncate">
-                  {ep.name}
-                </CardTitle>
-                {/* 추가 정보(설명, 날짜 등)도 여기에 배치 가능 */}
-              </div>
-            </Card>
-          </Link>
-        ))}
+      {/* Refactored Episode Grid:
+          - The complex JavaScript rounding logic has been removed.
+          - We apply rounding and overflow-hidden to the container for a clean look.
+          - Each card gets borders on the bottom and right to create a grid line effect.
+        */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l rounded-lg overflow-hidden">
+        {episodes.map((ep) => {
+          return <EpisodeCard episode={ep} seriesId={series.id} />;
+        })}
         {isEpisodeLoading &&
           Array.from({ length: 3 }).map((_, i) => (
             <Card
