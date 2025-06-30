@@ -1,11 +1,11 @@
 import { useAuthStore } from '../stores/authStore';
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import AuthButton from './AuthButton';
+import { Button } from '@/components/ui/button'; // shadcn 버튼 import
 import { useLogin } from '../hooks/useAuth';
 import type { LoginCredentials } from '../types/auth';
 
 export default function AuthButtons() {
-  const isLoggedIn = useAuthStore((state) => state.refreshToken); // 구독으로 상태 가져오기
+  const isLoggedIn = useAuthStore((state) => state.refreshToken);
   const mutation = useLogin();
   const isPending = mutation.isPending;
 
@@ -19,25 +19,35 @@ export default function AuthButtons() {
   return (
     <div className="flex items-center gap-2">
       {isLoggedIn ? (
-        <AuthButton label="로그아웃" onClick={handleLogout}>
+        <Button
+          className="rounded-full border-zinc-400 text-zinc-700 cursor-pointer"
+          variant="outline"
+          onClick={handleLogout}
+        >
           로그아웃
-        </AuthButton>
+        </Button>
       ) : (
         <>
-          <AuthButton
-            label="로그인"
+          <Button
+            className="rounded-full border-zinc-400 text-zinc-700 cursor-pointer"
+            variant="outline"
             onClick={() =>
               handleLogin({ username: 'super', password: 'super' })
             }
             disabled={isPending}
           >
             {isPending ? (
-              <ArrowPathIcon className="h-5 w-12 animate-spin" />
+              <ArrowPathIcon className="h-5 w-5 animate-spin" />
             ) : (
               '로그인'
             )}
-          </AuthButton>
-          <AuthButton label="회원가입">회원가입</AuthButton>
+          </Button>
+          <Button
+            className="rounded-full border-zinc-400 text-zinc-700 cursor-pointer"
+            variant="outline"
+          >
+            회원가입
+          </Button>
         </>
       )}
     </div>

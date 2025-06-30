@@ -20,7 +20,7 @@ export default function SeriesDetail({
   isEpisodeLoading,
 }: Props) {
   return (
-    <div className="p-6">
+    <div className="flex flex-1 w-full lg:max-w-350 flex-col p-6 bg-zinc-50 mx-auto">
       <div className="flex flex-col justify-center sm:flex-row sm:items-center gap-8 mb-8">
         <img
           src={series.image_src}

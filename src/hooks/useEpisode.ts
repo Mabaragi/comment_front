@@ -1,23 +1,20 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { axiosInstance } from '@/api/axiosInstance';
-import type { CrawlerSeriesEpisodeList200 } from '@/api/schemas';
-import { crawlerSeriesEpisodeList } from '@/api/endpoints';
-import type { CrawlerSeriesListParams } from '@/api/schemas';
+import type { EpisodeListResponse } from '@/types/episode';
+import { getEpisodeList } from './useCrawler';
+import type { EpisodeListParams } from '@/types/episode';
+import { apiNextInfinteQuery } from '@/api/custom';
 
 export function useEpisodeInfiniteList(
   seriesId: string,
-  params?: CrawlerSeriesListParams,
+  params?: EpisodeListParams,
 ) {
-  return useInfiniteQuery<CrawlerSeriesEpisodeList200>({
+  return useInfiniteQuery<EpisodeListResponse>({
     queryKey: ['episodes', seriesId],
     queryFn: ({ pageParam }) => {
       if (typeof pageParam === 'string') {
-        return axiosInstance<CrawlerSeriesEpisodeList200>({
-          method: 'GET',
-          url: pageParam,
-        });
+        return apiNextInfinteQuery(pageParam);
       }
-      return crawlerSeriesEpisodeList(seriesId, params);
+      return getEpisodeList(seriesId, params);
     },
     getNextPageParam: (lastPage) => {
       return lastPage.next;
