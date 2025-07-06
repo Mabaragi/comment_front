@@ -5,7 +5,10 @@
  * API for my project
  * OpenAPI spec version: v1
  */
-import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery
+} from '@tanstack/react-query';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -18,7 +21,7 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult,
+  UseQueryResult
 } from '@tanstack/react-query';
 
 import type {
@@ -35,1799 +38,1135 @@ import type {
   Series,
   SeriesCreate,
   TokenObtainPair,
-  TokenRefresh,
+  TokenRefresh
 } from './schemas';
 
 import { axiosInstance } from './axiosInstance';
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
-  T,
+T,
 >() => T extends Y ? 1 : 2
-  ? A
-  : B;
+? A
+: B;
 
 type WritableKeys<T> = {
-  [P in keyof T]-?: IfEquals<
-    { [Q in P]: T[P] },
-    { -readonly [Q in P]: T[P] },
-    P
-  >;
+[P in keyof T]-?: IfEquals<
+  { [Q in P]: T[P] },
+  { -readonly [Q in P]: T[P] },
+  P
+>;
 }[keyof T];
 
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I,
-) => void
-  ? I
-  : never;
+type UnionToIntersection<U> =
+  (U extends any ? (k: U)=>void : never) extends ((k: infer I)=>void) ? I : never;
 type DistributeReadOnlyOverUnions<T> = T extends any ? NonReadonly<T> : never;
 
 type Writable<T> = Pick<T, WritableKeys<T>>;
-type NonReadonly<T> = [T] extends [UnionToIntersection<T>]
-  ? {
-      [P in keyof Writable<T>]: T[P] extends object
-        ? NonReadonly<NonNullable<T[P]>>
-        : T[P];
-    }
-  : DistributeReadOnlyOverUnions<T>;
+type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
+  [P in keyof Writable<T>]: T[P] extends object
+    ? NonReadonly<NonNullable<T[P]>>
+    : T[P];
+} : DistributeReadOnlyOverUnions<T>;
+
+
+
 
 /**
  * 특정 시리즈의 에피소드를 조회합니다.
  */
-export const crawlerEpisodeRead = (productId: string, signal?: AbortSignal) => {
-  return axiosInstance<Episode>({
-    url: `/crawler/episode/${productId}/`,
-    method: 'GET',
-    signal,
-  });
-};
-
-export const getCrawlerEpisodeReadQueryKey = (productId: string) => {
-  return [`/crawler/episode/${productId}/`] as const;
-};
-
-export const getCrawlerEpisodeReadQueryOptions = <
-  TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
->(
-  productId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
+export const crawlerEpisodeRead = (
+    productId: string,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return axiosInstance<Episode>(
+      {url: `/crawler/episode/${productId}/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey =
-    queryOptions?.queryKey ?? getCrawlerEpisodeReadQueryKey(productId);
+export const getCrawlerEpisodeReadQueryKey = (productId: string,) => {
+    return [`/crawler/episode/${productId}/`] as const;
+    }
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof crawlerEpisodeRead>>
-  > = ({ signal }) => crawlerEpisodeRead(productId, signal);
+    
+export const getCrawlerEpisodeReadQueryOptions = <TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError = void>(productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData>>, }
+) => {
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!productId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+const {query: queryOptions} = options ?? {};
 
-export type CrawlerEpisodeReadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerEpisodeRead>>
->;
-export type CrawlerEpisodeReadQueryError = void;
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerEpisodeReadQueryKey(productId);
 
-export function useCrawlerEpisodeRead<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
->(
-  productId: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerEpisodeRead>>> = ({ signal }) => crawlerEpisodeRead(productId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerEpisodeReadQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerEpisodeRead>>>
+export type CrawlerEpisodeReadQueryError = void
+
+
+export function useCrawlerEpisodeRead<TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError = void>(
+ productId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerEpisodeRead>>,
           TError,
           Awaited<ReturnType<typeof crawlerEpisodeRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerEpisodeRead<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
->(
-  productId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeRead<TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError = void>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerEpisodeRead>>,
           TError,
           Awaited<ReturnType<typeof crawlerEpisodeRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerEpisodeRead<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
->(
-  productId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeRead<TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError = void>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCrawlerEpisodeRead<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
->(
-  productId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCrawlerEpisodeReadQueryOptions(productId, options);
+export function useCrawlerEpisodeRead<TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError = void>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeRead>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCrawlerEpisodeReadQueryOptions(productId,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 에피소드 댓글 목록을 조회하는 API 뷰입니다.
  */
 export const crawlerEpisodeCommentList = (
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
-  signal?: AbortSignal,
+    productId: string,
+    params?: CrawlerEpisodeCommentListParams,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<CrawlerEpisodeCommentList200>({
-    url: `/crawler/episode/${productId}/comment`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<CrawlerEpisodeCommentList200>(
+      {url: `/crawler/episode/${productId}/comment`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getCrawlerEpisodeCommentListQueryKey = (
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
+export const getCrawlerEpisodeCommentListQueryKey = (productId: string,
+    params?: CrawlerEpisodeCommentListParams,) => {
+    return [`/crawler/episode/${productId}/comment`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCrawlerEpisodeCommentListQueryOptions = <TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError = unknown>(productId: string,
+    params?: CrawlerEpisodeCommentListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData>>, }
 ) => {
-  return [
-    `/crawler/episode/${productId}/comment`,
-    ...(params ? [params] : []),
-  ] as const;
-};
 
-export const getCrawlerEpisodeCommentListQueryOptions = <
-  TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-  TError = unknown,
->(
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
+const {query: queryOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getCrawlerEpisodeCommentListQueryKey(productId, params);
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerEpisodeCommentListQueryKey(productId,params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof crawlerEpisodeCommentList>>
-  > = ({ signal }) => crawlerEpisodeCommentList(productId, params, signal);
+  
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!productId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>> = ({ signal }) => crawlerEpisodeCommentList(productId,params, signal);
 
-export type CrawlerEpisodeCommentListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerEpisodeCommentList>>
->;
-export type CrawlerEpisodeCommentListQueryError = unknown;
+      
 
-export function useCrawlerEpisodeCommentList<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-  TError = unknown,
->(
-  productId: string,
-  params: undefined | CrawlerEpisodeCommentListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerEpisodeCommentListQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>>
+export type CrawlerEpisodeCommentListQueryError = unknown
+
+
+export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError = unknown>(
+ productId: string,
+    params: undefined |  CrawlerEpisodeCommentListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
           TError,
           Awaited<ReturnType<typeof crawlerEpisodeCommentList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerEpisodeCommentList<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-  TError = unknown,
->(
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError = unknown>(
+ productId: string,
+    params?: CrawlerEpisodeCommentListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
           TError,
           Awaited<ReturnType<typeof crawlerEpisodeCommentList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerEpisodeCommentList<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-  TError = unknown,
->(
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError = unknown>(
+ productId: string,
+    params?: CrawlerEpisodeCommentListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCrawlerEpisodeCommentList<
-  TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-  TError = unknown,
->(
-  productId: string,
-  params?: CrawlerEpisodeCommentListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerEpisodeCommentList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCrawlerEpisodeCommentListQueryOptions(
-    productId,
-    params,
-    options,
-  );
+export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError = unknown>(
+ productId: string,
+    params?: CrawlerEpisodeCommentListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCrawlerEpisodeCommentListQueryOptions(productId,params,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 에피소드의 댓글을 크롤링하여 db에 저장합니다.
  */
 export const crawlerEpisodeCommentCrawlCreate = (
-  productId: string,
-  signal?: AbortSignal,
+    productId: string,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<EpisodeCreateResponse>({
-    url: `/crawler/episode/${productId}/comment/crawl`,
-    method: 'POST',
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<EpisodeCreateResponse>(
+      {url: `/crawler/episode/${productId}/comment/crawl`, method: 'POST', signal
+    },
+      );
+    }
+  
 
-export const getCrawlerEpisodeCommentCrawlCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
-    TError,
-    { productId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
-  TError,
-  { productId: string },
-  TContext
-> => {
-  const mutationKey = ['crawlerEpisodeCommentCrawlCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
-    { productId: string }
-  > = (props) => {
-    const { productId } = props ?? {};
+export const getCrawlerEpisodeCommentCrawlCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext> => {
 
-    return crawlerEpisodeCommentCrawlCreate(productId);
-  };
+const mutationKey = ['crawlerEpisodeCommentCrawlCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type CrawlerEpisodeCommentCrawlCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>
->;
 
-export type CrawlerEpisodeCommentCrawlCreateMutationError = unknown;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, {productId: string}> = (props) => {
+          const {productId} = props ?? {};
 
-export const useCrawlerEpisodeCommentCrawlCreate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
-      TError,
-      { productId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
-  TError,
-  { productId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getCrawlerEpisodeCommentCrawlCreateMutationOptions(options);
+          return  crawlerEpisodeCommentCrawlCreate(productId,)
+        }
 
-  return useMutation(mutationOptions, queryClient);
-};
+        
 
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrawlerEpisodeCommentCrawlCreateMutationResult = NonNullable<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>>
+    
+    export type CrawlerEpisodeCommentCrawlCreateMutationError = unknown
+
+    export const useCrawlerEpisodeCommentCrawlCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>, TError,{productId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>,
+        TError,
+        {productId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getCrawlerEpisodeCommentCrawlCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Retrieve a list of series
  */
 export const crawlerSeriesList = (
-  params?: CrawlerSeriesListParams,
-  signal?: AbortSignal,
+    params?: CrawlerSeriesListParams,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<Series[]>({
-    url: `/crawler/series/`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<Series[]>(
+      {url: `/crawler/series/`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getCrawlerSeriesListQueryKey = (
-  params?: CrawlerSeriesListParams,
+export const getCrawlerSeriesListQueryKey = (params?: CrawlerSeriesListParams,) => {
+    return [`/crawler/series/`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCrawlerSeriesListQueryOptions = <TData = Awaited<ReturnType<typeof crawlerSeriesList>>, TError = unknown>(params?: CrawlerSeriesListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData>>, }
 ) => {
-  return [`/crawler/series/`, ...(params ? [params] : [])] as const;
-};
 
-export const getCrawlerSeriesListQueryOptions = <
-  TData = Awaited<ReturnType<typeof crawlerSeriesList>>,
-  TError = unknown,
->(
-  params?: CrawlerSeriesListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
+const {query: queryOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getCrawlerSeriesListQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerSeriesListQueryKey(params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof crawlerSeriesList>>
-  > = ({ signal }) => crawlerSeriesList(params, signal);
+  
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof crawlerSeriesList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerSeriesList>>> = ({ signal }) => crawlerSeriesList(params, signal);
 
-export type CrawlerSeriesListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerSeriesList>>
->;
-export type CrawlerSeriesListQueryError = unknown;
+      
 
-export function useCrawlerSeriesList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesList>>,
-  TError = unknown,
->(
-  params: undefined | CrawlerSeriesListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerSeriesListQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerSeriesList>>>
+export type CrawlerSeriesListQueryError = unknown
+
+
+export function useCrawlerSeriesList<TData = Awaited<ReturnType<typeof crawlerSeriesList>>, TError = unknown>(
+ params: undefined |  CrawlerSeriesListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesList>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesList>>,
-  TError = unknown,
->(
-  params?: CrawlerSeriesListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesList<TData = Awaited<ReturnType<typeof crawlerSeriesList>>, TError = unknown>(
+ params?: CrawlerSeriesListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesList>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesList>>,
-  TError = unknown,
->(
-  params?: CrawlerSeriesListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesList<TData = Awaited<ReturnType<typeof crawlerSeriesList>>, TError = unknown>(
+ params?: CrawlerSeriesListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCrawlerSeriesList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesList>>,
-  TError = unknown,
->(
-  params?: CrawlerSeriesListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCrawlerSeriesListQueryOptions(params, options);
+export function useCrawlerSeriesList<TData = Awaited<ReturnType<typeof crawlerSeriesList>>, TError = unknown>(
+ params?: CrawlerSeriesListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCrawlerSeriesListQueryOptions(params,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * Create a series
  */
 export const crawlerSeriesCrawlCreate = (
-  seriesCreate: SeriesCreate,
-  signal?: AbortSignal,
+    seriesCreate: SeriesCreate,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<Series>({
-    url: `/crawler/series/crawl/`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: seriesCreate,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<Series>(
+      {url: `/crawler/series/crawl/`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: seriesCreate, signal
+    },
+      );
+    }
+  
 
-export const getCrawlerSeriesCrawlCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
-    TError,
-    { data: SeriesCreate },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
-  TError,
-  { data: SeriesCreate },
-  TContext
-> => {
-  const mutationKey = ['crawlerSeriesCrawlCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
-    { data: SeriesCreate }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getCrawlerSeriesCrawlCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>, TError,{data: SeriesCreate}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>, TError,{data: SeriesCreate}, TContext> => {
 
-    return crawlerSeriesCrawlCreate(data);
-  };
+const mutationKey = ['crawlerSeriesCrawlCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type CrawlerSeriesCrawlCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>
->;
-export type CrawlerSeriesCrawlCreateMutationBody = SeriesCreate;
-export type CrawlerSeriesCrawlCreateMutationError = unknown;
 
-export const useCrawlerSeriesCrawlCreate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
-      TError,
-      { data: SeriesCreate },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
-  TError,
-  { data: SeriesCreate },
-  TContext
-> => {
-  const mutationOptions = getCrawlerSeriesCrawlCreateMutationOptions(options);
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>, {data: SeriesCreate}> = (props) => {
+          const {data} = props ?? {};
 
-  return useMutation(mutationOptions, queryClient);
-};
+          return  crawlerSeriesCrawlCreate(data,)
+        }
 
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrawlerSeriesCrawlCreateMutationResult = NonNullable<Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>>
+    export type CrawlerSeriesCrawlCreateMutationBody = SeriesCreate
+    export type CrawlerSeriesCrawlCreateMutationError = unknown
+
+    export const useCrawlerSeriesCrawlCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>, TError,{data: SeriesCreate}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>,
+        TError,
+        {data: SeriesCreate},
+        TContext
+      > => {
+
+      const mutationOptions = getCrawlerSeriesCrawlCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Retrieve a series by ID
  */
-export const crawlerSeriesRead = (seriesId: string, signal?: AbortSignal) => {
-  return axiosInstance<Series>({
-    url: `/crawler/series/${seriesId}/`,
-    method: 'GET',
-    signal,
-  });
-};
-
-export const getCrawlerSeriesReadQueryKey = (seriesId: string) => {
-  return [`/crawler/series/${seriesId}/`] as const;
-};
-
-export const getCrawlerSeriesReadQueryOptions = <
-  TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
->(
-  seriesId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
+export const crawlerSeriesRead = (
+    seriesId: string,
+ signal?: AbortSignal
 ) => {
-  const { query: queryOptions } = options ?? {};
+      
+      
+      return axiosInstance<Series>(
+      {url: `/crawler/series/${seriesId}/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-  const queryKey =
-    queryOptions?.queryKey ?? getCrawlerSeriesReadQueryKey(seriesId);
+export const getCrawlerSeriesReadQueryKey = (seriesId: string,) => {
+    return [`/crawler/series/${seriesId}/`] as const;
+    }
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof crawlerSeriesRead>>
-  > = ({ signal }) => crawlerSeriesRead(seriesId, signal);
+    
+export const getCrawlerSeriesReadQueryOptions = <TData = Awaited<ReturnType<typeof crawlerSeriesRead>>, TError = void>(seriesId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData>>, }
+) => {
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!seriesId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof crawlerSeriesRead>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+const {query: queryOptions} = options ?? {};
 
-export type CrawlerSeriesReadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerSeriesRead>>
->;
-export type CrawlerSeriesReadQueryError = void;
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerSeriesReadQueryKey(seriesId);
 
-export function useCrawlerSeriesRead<
-  TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
->(
-  seriesId: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerSeriesRead>>> = ({ signal }) => crawlerSeriesRead(seriesId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(seriesId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerSeriesReadQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerSeriesRead>>>
+export type CrawlerSeriesReadQueryError = void
+
+
+export function useCrawlerSeriesRead<TData = Awaited<ReturnType<typeof crawlerSeriesRead>>, TError = void>(
+ seriesId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesRead>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesRead<
-  TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
->(
-  seriesId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesRead<TData = Awaited<ReturnType<typeof crawlerSeriesRead>>, TError = void>(
+ seriesId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesRead>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesRead<
-  TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
->(
-  seriesId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesRead<TData = Awaited<ReturnType<typeof crawlerSeriesRead>>, TError = void>(
+ seriesId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCrawlerSeriesRead<
-  TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
->(
-  seriesId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCrawlerSeriesReadQueryOptions(seriesId, options);
+export function useCrawlerSeriesRead<TData = Awaited<ReturnType<typeof crawlerSeriesRead>>, TError = void>(
+ seriesId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesRead>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCrawlerSeriesReadQueryOptions(seriesId,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 에피소드 목록을 조회하는 API 뷰입니다.
  */
 export const crawlerSeriesEpisodeList = (
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
-  signal?: AbortSignal,
+    seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<CrawlerSeriesEpisodeList200>({
-    url: `/crawler/series/${seriesId}/episode/`,
-    method: 'GET',
-    params,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<CrawlerSeriesEpisodeList200>(
+      {url: `/crawler/series/${seriesId}/episode/`, method: 'GET',
+        params, signal
+    },
+      );
+    }
+  
 
-export const getCrawlerSeriesEpisodeListQueryKey = (
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
+export const getCrawlerSeriesEpisodeListQueryKey = (seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams,) => {
+    return [`/crawler/series/${seriesId}/episode/`, ...(params ? [params]: [])] as const;
+    }
+
+    
+export const getCrawlerSeriesEpisodeListQueryOptions = <TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError = unknown>(seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData>>, }
 ) => {
-  return [
-    `/crawler/series/${seriesId}/episode/`,
-    ...(params ? [params] : []),
-  ] as const;
-};
 
-export const getCrawlerSeriesEpisodeListQueryOptions = <
-  TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-  TError = unknown,
->(
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-) => {
-  const { query: queryOptions } = options ?? {};
+const {query: queryOptions} = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ??
-    getCrawlerSeriesEpisodeListQueryKey(seriesId, params);
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerSeriesEpisodeListQueryKey(seriesId,params);
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>
-  > = ({ signal }) => crawlerSeriesEpisodeList(seriesId, params, signal);
+  
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!seriesId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>> = ({ signal }) => crawlerSeriesEpisodeList(seriesId,params, signal);
 
-export type CrawlerSeriesEpisodeListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>
->;
-export type CrawlerSeriesEpisodeListQueryError = unknown;
+      
 
-export function useCrawlerSeriesEpisodeList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-  TError = unknown,
->(
-  seriesId: string,
-  params: undefined | CrawlerSeriesEpisodeListParams,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+   return  { queryKey, queryFn, enabled: !!(seriesId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerSeriesEpisodeListQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>>
+export type CrawlerSeriesEpisodeListQueryError = unknown
+
+
+export function useCrawlerSeriesEpisodeList<TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError = unknown>(
+ seriesId: string,
+    params: undefined |  CrawlerSeriesEpisodeListParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesEpisodeList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-  TError = unknown,
->(
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesEpisodeList<TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError = unknown>(
+ seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
           TError,
           Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useCrawlerSeriesEpisodeList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-  TError = unknown,
->(
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerSeriesEpisodeList<TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError = unknown>(
+ seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useCrawlerSeriesEpisodeList<
-  TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-  TError = unknown,
->(
-  seriesId: string,
-  params?: CrawlerSeriesEpisodeListParams,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getCrawlerSeriesEpisodeListQueryOptions(
-    seriesId,
-    params,
-    options,
-  );
+export function useCrawlerSeriesEpisodeList<TData = Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError = unknown>(
+ seriesId: string,
+    params?: CrawlerSeriesEpisodeListParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getCrawlerSeriesEpisodeListQueryOptions(seriesId,params,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 에피소드를 크롤링하여 db에 저장합니다.
  */
 export const crawlerSeriesEpisodeCrawlCreate = (
-  seriesId: string,
-  signal?: AbortSignal,
+    seriesId: string,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<EpisodeCreateResponse>({
-    url: `/crawler/series/${seriesId}/episode/crawl`,
-    method: 'POST',
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<EpisodeCreateResponse>(
+      {url: `/crawler/series/${seriesId}/episode/crawl`, method: 'POST', signal
+    },
+      );
+    }
+  
 
-export const getCrawlerSeriesEpisodeCrawlCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
-    TError,
-    { seriesId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
-  TError,
-  { seriesId: string },
-  TContext
-> => {
-  const mutationKey = ['crawlerSeriesEpisodeCrawlCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
-    { seriesId: string }
-  > = (props) => {
-    const { seriesId } = props ?? {};
+export const getCrawlerSeriesEpisodeCrawlCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>, TError,{seriesId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>, TError,{seriesId: string}, TContext> => {
 
-    return crawlerSeriesEpisodeCrawlCreate(seriesId);
-  };
+const mutationKey = ['crawlerSeriesEpisodeCrawlCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type CrawlerSeriesEpisodeCrawlCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>
->;
 
-export type CrawlerSeriesEpisodeCrawlCreateMutationError = unknown;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>, {seriesId: string}> = (props) => {
+          const {seriesId} = props ?? {};
 
-export const useCrawlerSeriesEpisodeCrawlCreate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
-      TError,
-      { seriesId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
-  TError,
-  { seriesId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getCrawlerSeriesEpisodeCrawlCreateMutationOptions(options);
+          return  crawlerSeriesEpisodeCrawlCreate(seriesId,)
+        }
 
-  return useMutation(mutationOptions, queryClient);
-};
+        
 
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CrawlerSeriesEpisodeCrawlCreateMutationResult = NonNullable<Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>>
+    
+    export type CrawlerSeriesEpisodeCrawlCreateMutationError = unknown
+
+    export const useCrawlerSeriesEpisodeCrawlCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>, TError,{seriesId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>,
+        TError,
+        {seriesId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getCrawlerSeriesEpisodeCrawlCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * 댓글 감정 분석 결과 조회
  */
 export const llmApiEmotionAnalysisRead = (
-  commentId: string,
-  signal?: AbortSignal,
+    commentId: string,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<CommentEmotionAnalysis>({
-    url: `/llm/api/emotion-analysis/${commentId}/`,
-    method: 'GET',
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<CommentEmotionAnalysis>(
+      {url: `/llm/api/emotion-analysis/${commentId}/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
-export const getLlmApiEmotionAnalysisReadQueryKey = (commentId: string) => {
-  return [`/llm/api/emotion-analysis/${commentId}/`] as const;
-};
+export const getLlmApiEmotionAnalysisReadQueryKey = (commentId: string,) => {
+    return [`/llm/api/emotion-analysis/${commentId}/`] as const;
+    }
 
-export const getLlmApiEmotionAnalysisReadQueryOptions = <
-  TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-  TError = void,
->(
-  commentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
+    
+export const getLlmApiEmotionAnalysisReadQueryOptions = <TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
 ) => {
-  const { query: queryOptions } = options ?? {};
 
-  const queryKey =
-    queryOptions?.queryKey ?? getLlmApiEmotionAnalysisReadQueryKey(commentId);
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
-  > = ({ signal }) => llmApiEmotionAnalysisRead(commentId, signal);
+  const queryKey =  queryOptions?.queryKey ?? getLlmApiEmotionAnalysisReadQueryKey(commentId);
 
-  return {
-    queryKey,
-    queryFn,
-    enabled: !!commentId,
-    ...queryOptions,
-  } as UseQueryOptions<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type LlmApiEmotionAnalysisReadQueryResult = NonNullable<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
->;
-export type LlmApiEmotionAnalysisReadQueryError = void;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>> = ({ signal }) => llmApiEmotionAnalysisRead(commentId, signal);
 
-export function useLlmApiEmotionAnalysisRead<
-  TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-  TError = void,
->(
-  commentId: string,
-  options: {
-    query: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(commentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type LlmApiEmotionAnalysisReadQueryResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>>
+export type LlmApiEmotionAnalysisReadQueryError = void
+
+
+export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
+ commentId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
           TError,
           Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useLlmApiEmotionAnalysisRead<
-  TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-  TError = void,
->(
-  commentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-        TError,
-        TData
-      >
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
+ commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
           TError,
           Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useLlmApiEmotionAnalysisRead<
-  TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-  TError = void,
->(
-  commentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
+ commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useLlmApiEmotionAnalysisRead<
-  TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-  TError = void,
->(
-  commentId: string,
-  options?: {
-    query?: Partial<
-      UseQueryOptions<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-        TError,
-        TData
-      >
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getLlmApiEmotionAnalysisReadQueryOptions(
-    commentId,
-    options,
-  );
+export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
+ commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getLlmApiEmotionAnalysisReadQueryOptions(commentId,options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
 
 /**
  * 댓글 감정 분석 요청
  */
 export const llmApiEmotionAnalysisCreate = (
-  commentId: string,
-  signal?: AbortSignal,
+    commentId: string,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<CommentEmotionAnalysis>({
-    url: `/llm/api/emotion-analysis/${commentId}/`,
-    method: 'POST',
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<CommentEmotionAnalysis>(
+      {url: `/llm/api/emotion-analysis/${commentId}/`, method: 'POST', signal
+    },
+      );
+    }
+  
 
-export const getLlmApiEmotionAnalysisCreateMutationOptions = <
-  TError = void,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-    TError,
-    { commentId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationKey = ['llmApiEmotionAnalysisCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-    { commentId: string }
-  > = (props) => {
-    const { commentId } = props ?? {};
+export const getLlmApiEmotionAnalysisCreateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext> => {
 
-    return llmApiEmotionAnalysisCreate(commentId);
-  };
+const mutationKey = ['llmApiEmotionAnalysisCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type LlmApiEmotionAnalysisCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>
->;
 
-export type LlmApiEmotionAnalysisCreateMutationError = void;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, {commentId: string}> = (props) => {
+          const {commentId} = props ?? {};
 
-export const useLlmApiEmotionAnalysisCreate = <
-  TError = void,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-      TError,
-      { commentId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getLlmApiEmotionAnalysisCreateMutationOptions(options);
+          return  llmApiEmotionAnalysisCreate(commentId,)
+        }
 
-  return useMutation(mutationOptions, queryClient);
-};
+        
 
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LlmApiEmotionAnalysisCreateMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>>
+    
+    export type LlmApiEmotionAnalysisCreateMutationError = void
+
+    export const useLlmApiEmotionAnalysisCreate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
+        TError,
+        {commentId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getLlmApiEmotionAnalysisCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * 댓글 감정 분석 결과 삭제
  */
-export const llmApiEmotionAnalysisDeleteDelete = (commentId: string) => {
-  return axiosInstance<void>({
-    url: `/llm/api/emotion-analysis/${commentId}/delete/`,
-    method: 'DELETE',
-  });
-};
+export const llmApiEmotionAnalysisDeleteDelete = (
+    commentId: string,
+ ) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/llm/api/emotion-analysis/${commentId}/delete/`, method: 'DELETE'
+    },
+      );
+    }
+  
 
-export const getLlmApiEmotionAnalysisDeleteDeleteMutationOptions = <
-  TError = void,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
-    TError,
-    { commentId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationKey = ['llmApiEmotionAnalysisDeleteDelete'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
-    { commentId: string }
-  > = (props) => {
-    const { commentId } = props ?? {};
+export const getLlmApiEmotionAnalysisDeleteDeleteMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>, TError,{commentId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>, TError,{commentId: string}, TContext> => {
 
-    return llmApiEmotionAnalysisDeleteDelete(commentId);
-  };
+const mutationKey = ['llmApiEmotionAnalysisDeleteDelete'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type LlmApiEmotionAnalysisDeleteDeleteMutationResult = NonNullable<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>
->;
 
-export type LlmApiEmotionAnalysisDeleteDeleteMutationError = void;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>, {commentId: string}> = (props) => {
+          const {commentId} = props ?? {};
 
-export const useLlmApiEmotionAnalysisDeleteDelete = <
-  TError = void,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
-      TError,
-      { commentId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
-  TError,
-  { commentId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getLlmApiEmotionAnalysisDeleteDeleteMutationOptions(options);
+          return  llmApiEmotionAnalysisDeleteDelete(commentId,)
+        }
 
-  return useMutation(mutationOptions, queryClient);
-};
+        
 
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LlmApiEmotionAnalysisDeleteDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>>
+    
+    export type LlmApiEmotionAnalysisDeleteDeleteMutationError = void
+
+    export const useLlmApiEmotionAnalysisDeleteDelete = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>, TError,{commentId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof llmApiEmotionAnalysisDeleteDelete>>,
+        TError,
+        {commentId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getLlmApiEmotionAnalysisDeleteDeleteMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Create a summary of comment emotion analysis results.
  */
 export const llmApiSummaryAnalysisCreate = (
-  episodeId: string,
-  signal?: AbortSignal,
+    episodeId: string,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<void>({
-    url: `/llm/api/summary-analysis/${episodeId}/`,
-    method: 'POST',
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<void>(
+      {url: `/llm/api/summary-analysis/${episodeId}/`, method: 'POST', signal
+    },
+      );
+    }
+  
 
-export const getLlmApiSummaryAnalysisCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
-    TError,
-    { episodeId: string },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
-  TError,
-  { episodeId: string },
-  TContext
-> => {
-  const mutationKey = ['llmApiSummaryAnalysisCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
-    { episodeId: string }
-  > = (props) => {
-    const { episodeId } = props ?? {};
+export const getLlmApiSummaryAnalysisCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext> => {
 
-    return llmApiSummaryAnalysisCreate(episodeId);
-  };
+const mutationKey = ['llmApiSummaryAnalysisCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type LlmApiSummaryAnalysisCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>
->;
 
-export type LlmApiSummaryAnalysisCreateMutationError = unknown;
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, {episodeId: string}> = (props) => {
+          const {episodeId} = props ?? {};
 
-export const useLlmApiSummaryAnalysisCreate = <
-  TError = unknown,
-  TContext = unknown,
->(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
-      TError,
-      { episodeId: string },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
-  TError,
-  { episodeId: string },
-  TContext
-> => {
-  const mutationOptions =
-    getLlmApiSummaryAnalysisCreateMutationOptions(options);
+          return  llmApiSummaryAnalysisCreate(episodeId,)
+        }
 
-  return useMutation(mutationOptions, queryClient);
-};
+        
 
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LlmApiSummaryAnalysisCreateMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>>
+    
+    export type LlmApiSummaryAnalysisCreateMutationError = unknown
+
+    export const useLlmApiSummaryAnalysisCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
+        TError,
+        {episodeId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getLlmApiSummaryAnalysisCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * 로그인 후 access/refresh 토큰 반환
  */
 export const tokenCreate = (
-  tokenObtainPair: TokenObtainPair,
-  signal?: AbortSignal,
+    tokenObtainPair: TokenObtainPair,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<CustomTokenObtainPair>({
-    url: `/token/`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: tokenObtainPair,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<CustomTokenObtainPair>(
+      {url: `/token/`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: tokenObtainPair, signal
+    },
+      );
+    }
+  
 
-export const getTokenCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof tokenCreate>>,
-    TError,
-    { data: TokenObtainPair },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof tokenCreate>>,
-  TError,
-  { data: TokenObtainPair },
-  TContext
-> => {
-  const mutationKey = ['tokenCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof tokenCreate>>,
-    { data: TokenObtainPair }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getTokenCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tokenCreate>>, TError,{data: TokenObtainPair}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof tokenCreate>>, TError,{data: TokenObtainPair}, TContext> => {
 
-    return tokenCreate(data);
-  };
+const mutationKey = ['tokenCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type TokenCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof tokenCreate>>
->;
-export type TokenCreateMutationBody = TokenObtainPair;
-export type TokenCreateMutationError = unknown;
 
-export const useTokenCreate = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof tokenCreate>>,
-      TError,
-      { data: TokenObtainPair },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof tokenCreate>>,
-  TError,
-  { data: TokenObtainPair },
-  TContext
-> => {
-  const mutationOptions = getTokenCreateMutationOptions(options);
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof tokenCreate>>, {data: TokenObtainPair}> = (props) => {
+          const {data} = props ?? {};
 
-  return useMutation(mutationOptions, queryClient);
-};
+          return  tokenCreate(data,)
+        }
 
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TokenCreateMutationResult = NonNullable<Awaited<ReturnType<typeof tokenCreate>>>
+    export type TokenCreateMutationBody = TokenObtainPair
+    export type TokenCreateMutationError = unknown
+
+    export const useTokenCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tokenCreate>>, TError,{data: TokenObtainPair}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof tokenCreate>>,
+        TError,
+        {data: TokenObtainPair},
+        TContext
+      > => {
+
+      const mutationOptions = getTokenCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Takes a refresh type JSON web token and returns an access type JSON web
 token if the refresh token is valid.
  */
 export const tokenRefreshCreate = (
-  tokenRefresh: NonReadonly<TokenRefresh>,
-  signal?: AbortSignal,
+    tokenRefresh: NonReadonly<TokenRefresh>,
+ signal?: AbortSignal
 ) => {
-  return axiosInstance<TokenRefresh>({
-    url: `/token/refresh/`,
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    data: tokenRefresh,
-    signal,
-  });
-};
+      
+      
+      return axiosInstance<TokenRefresh>(
+      {url: `/token/refresh/`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: tokenRefresh, signal
+    },
+      );
+    }
+  
 
-export const getTokenRefreshCreateMutationOptions = <
-  TError = unknown,
-  TContext = unknown,
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof tokenRefreshCreate>>,
-    TError,
-    { data: NonReadonly<TokenRefresh> },
-    TContext
-  >;
-}): UseMutationOptions<
-  Awaited<ReturnType<typeof tokenRefreshCreate>>,
-  TError,
-  { data: NonReadonly<TokenRefresh> },
-  TContext
-> => {
-  const mutationKey = ['tokenRefreshCreate'];
-  const { mutation: mutationOptions } = options
-    ? options.mutation &&
-      'mutationKey' in options.mutation &&
-      options.mutation.mutationKey
-      ? options
-      : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey } };
 
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof tokenRefreshCreate>>,
-    { data: NonReadonly<TokenRefresh> }
-  > = (props) => {
-    const { data } = props ?? {};
+export const getTokenRefreshCreateMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tokenRefreshCreate>>, TError,{data: NonReadonly<TokenRefresh>}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof tokenRefreshCreate>>, TError,{data: NonReadonly<TokenRefresh>}, TContext> => {
 
-    return tokenRefreshCreate(data);
-  };
+const mutationKey = ['tokenRefreshCreate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
 
-  return { mutationFn, ...mutationOptions };
-};
+      
 
-export type TokenRefreshCreateMutationResult = NonNullable<
-  Awaited<ReturnType<typeof tokenRefreshCreate>>
->;
-export type TokenRefreshCreateMutationBody = NonReadonly<TokenRefresh>;
-export type TokenRefreshCreateMutationError = unknown;
 
-export const useTokenRefreshCreate = <TError = unknown, TContext = unknown>(
-  options?: {
-    mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof tokenRefreshCreate>>,
-      TError,
-      { data: NonReadonly<TokenRefresh> },
-      TContext
-    >;
-  },
-  queryClient?: QueryClient,
-): UseMutationResult<
-  Awaited<ReturnType<typeof tokenRefreshCreate>>,
-  TError,
-  { data: NonReadonly<TokenRefresh> },
-  TContext
-> => {
-  const mutationOptions = getTokenRefreshCreateMutationOptions(options);
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof tokenRefreshCreate>>, {data: NonReadonly<TokenRefresh>}> = (props) => {
+          const {data} = props ?? {};
 
-  return useMutation(mutationOptions, queryClient);
-};
+          return  tokenRefreshCreate(data,)
+        }
 
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type TokenRefreshCreateMutationResult = NonNullable<Awaited<ReturnType<typeof tokenRefreshCreate>>>
+    export type TokenRefreshCreateMutationBody = NonReadonly<TokenRefresh>
+    export type TokenRefreshCreateMutationError = unknown
+
+    export const useTokenRefreshCreate = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof tokenRefreshCreate>>, TError,{data: NonReadonly<TokenRefresh>}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof tokenRefreshCreate>>,
+        TError,
+        {data: NonReadonly<TokenRefresh>},
+        TContext
+      > => {
+
+      const mutationOptions = getTokenRefreshCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
 /**
  * Retrieve a list of users
  */
-export const userList = (signal?: AbortSignal) => {
-  return axiosInstance<CustomUser[]>({ url: `/user/`, method: 'GET', signal });
-};
+export const userList = (
+    
+ signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<CustomUser[]>(
+      {url: `/user/`, method: 'GET', signal
+    },
+      );
+    }
+  
 
 export const getUserListQueryKey = () => {
-  return [`/user/`] as const;
-};
+    return [`/user/`] as const;
+    }
 
-export const getUserListQueryOptions = <
-  TData = Awaited<ReturnType<typeof userList>>,
-  TError = unknown,
->(options?: {
-  query?: Partial<
-    UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>
-  >;
-}) => {
-  const { query: queryOptions } = options ?? {};
+    
+export const getUserListQueryOptions = <TData = Awaited<ReturnType<typeof userList>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>>, }
+) => {
 
-  const queryKey = queryOptions?.queryKey ?? getUserListQueryKey();
+const {query: queryOptions} = options ?? {};
 
-  const queryFn: QueryFunction<Awaited<ReturnType<typeof userList>>> = ({
-    signal,
-  }) => userList(signal);
+  const queryKey =  queryOptions?.queryKey ?? getUserListQueryKey();
 
-  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
-    Awaited<ReturnType<typeof userList>>,
-    TError,
-    TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
-};
+  
 
-export type UserListQueryResult = NonNullable<
-  Awaited<ReturnType<typeof userList>>
->;
-export type UserListQueryError = unknown;
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof userList>>> = ({ signal }) => userList(signal);
 
-export function useUserList<
-  TData = Awaited<ReturnType<typeof userList>>,
-  TError = unknown,
->(
-  options: {
-    query: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>
-    > &
-      Pick<
+      
+
+      
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type UserListQueryResult = NonNullable<Awaited<ReturnType<typeof userList>>>
+export type UserListQueryError = unknown
+
+
+export function useUserList<TData = Awaited<ReturnType<typeof userList>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof userList>>,
           TError,
           Awaited<ReturnType<typeof userList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useUserList<
-  TData = Awaited<ReturnType<typeof userList>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>
-    > &
-      Pick<
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUserList<TData = Awaited<ReturnType<typeof userList>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof userList>>,
           TError,
           Awaited<ReturnType<typeof userList>>
-        >,
-        'initialData'
-      >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
-export function useUserList<
-  TData = Awaited<ReturnType<typeof userList>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-};
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUserList<TData = Awaited<ReturnType<typeof userList>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useUserList<
-  TData = Awaited<ReturnType<typeof userList>>,
-  TError = unknown,
->(
-  options?: {
-    query?: Partial<
-      UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>
-    >;
-  },
-  queryClient?: QueryClient,
-): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>;
-} {
-  const queryOptions = getUserListQueryOptions(options);
+export function useUserList<TData = Awaited<ReturnType<typeof userList>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
-    TData,
-    TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> };
+  const queryOptions = getUserListQueryOptions(options)
 
-  query.queryKey = queryOptions.queryKey;
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
 
   return query;
 }
+
+
+
+

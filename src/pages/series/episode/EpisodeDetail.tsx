@@ -10,7 +10,10 @@ function MyTabTrigger({
 }) {
   return (
     <TabsTrigger
-      className="data-[state=active]:bg-zinc-100 border-0 rounded-none data-[state=active]:rounded-none bg-zinc-200 data-[state=active]:shadow-none"
+      className="data-[state=active]:bg-zinc-100 border-0 rounded-none data-[state=active]:rounded-none bg-zinc-200 data-[state=active]:shadow-none
+      shadow-none
+      h-13
+      "
       value={value}
     >
       {children}
@@ -20,12 +23,17 @@ function MyTabTrigger({
 
 export default function EpisodeDetail() {
   return (
-    <Tabs defaultValue="comment-list" className="w-full">
+    <Tabs
+      defaultValue="comment-list"
+      className="w-full 
+    "
+    >
       <TabsList className="p-0 w-full">
         <MyTabTrigger value="comment-list">댓글 목록</MyTabTrigger>
         <MyTabTrigger value="comment-analysis">댓글 분석</MyTabTrigger>
         <MyTabTrigger value="comment-stats">댓글 통계</MyTabTrigger>
       </TabsList>
+      {/* <div>댓글 수: 500개</div> */}
       <TabsContent value="comment-list">
         <CommentsListContainer />
       </TabsContent>

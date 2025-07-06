@@ -10,7 +10,7 @@ export function useCommentInfiniteList(
   params?: CommentListParams,
 ) {
   return useInfiniteQuery<CommentListResponse>({
-    queryKey: ['comments', productId],
+    queryKey: ['comments', productId, params], // params 추가
     queryFn: ({ pageParam }) => {
       if (typeof pageParam === 'string') {
         return apiNextInfinteQuery(pageParam);
@@ -20,6 +20,6 @@ export function useCommentInfiniteList(
     getNextPageParam: (lastPage) => {
       return lastPage.next;
     },
-    initialPageParam: null as string | null, // ✅ 필수
+    initialPageParam: null as string | null,
   });
 }

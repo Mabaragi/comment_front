@@ -4,15 +4,25 @@
     "title": "API Documentation",
     "description": "API for my project",
     "termsOfService": "https://www.google.com/policies/terms/",
-    "contact": { "email": "support@example.com" },
-    "license": { "name": "BSD License" },
+    "contact": {
+      "email": "support@example.com"
+    },
+    "license": {
+      "name": "BSD License"
+    },
     "version": "v1"
   },
   "host": "localhost:8000",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "basePath": "/",
-  "consumes": ["application/json"],
-  "produces": ["application/json"],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "securityDefinitions": {
     "Bearer": {
       "type": "apiKey",
@@ -21,7 +31,11 @@
       "description": "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\""
     }
   },
-  "security": [{ "Bearer": [] }],
+  "security": [
+    {
+      "Bearer": []
+    }
+  ],
   "paths": {
     "/crawler/episode/{product_id}/": {
       "get": {
@@ -40,11 +54,17 @@
         "responses": {
           "200": {
             "description": "",
-            "schema": { "$ref": "#/definitions/Episode" }
+            "schema": {
+              "$ref": "#/definitions/Episode"
+            }
           },
-          "404": { "description": "Not Found" }
+          "404": {
+            "description": "Not Found"
+          }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -82,6 +102,13 @@
             "type": "string"
           },
           {
+            "name": "ordering",
+            "in": "query",
+            "description": "정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,content)",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "product_id",
             "in": "path",
             "description": "댓글이 속한 에피소드의 ID",
@@ -94,10 +121,15 @@
           "200": {
             "description": "",
             "schema": {
-              "required": ["count", "results"],
+              "required": [
+                "count",
+                "results"
+              ],
               "type": "object",
               "properties": {
-                "count": { "type": "integer" },
+                "count": {
+                  "type": "integer"
+                },
                 "next": {
                   "type": "string",
                   "format": "uri",
@@ -110,13 +142,17 @@
                 },
                 "results": {
                   "type": "array",
-                  "items": { "$ref": "#/definitions/Comment" }
+                  "items": {
+                    "$ref": "#/definitions/Comment"
+                  }
                 }
               }
             }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -144,10 +180,14 @@
         "responses": {
           "207": {
             "description": "",
-            "schema": { "$ref": "#/definitions/EpisodeCreateResponse" }
+            "schema": {
+              "$ref": "#/definitions/EpisodeCreateResponse"
+            }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -183,6 +223,13 @@
             "description": "불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "ordering",
+            "in": "query",
+            "description": "정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,title)",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -190,11 +237,15 @@
             "description": "",
             "schema": {
               "type": "array",
-              "items": { "$ref": "#/definitions/Series" }
+              "items": {
+                "$ref": "#/definitions/Series"
+              }
             }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": []
     },
@@ -207,16 +258,22 @@
             "name": "data",
             "in": "body",
             "required": true,
-            "schema": { "$ref": "#/definitions/SeriesCreate" }
+            "schema": {
+              "$ref": "#/definitions/SeriesCreate"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "",
-            "schema": { "$ref": "#/definitions/Series" }
+            "schema": {
+              "$ref": "#/definitions/Series"
+            }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": []
     },
@@ -237,11 +294,17 @@
         "responses": {
           "200": {
             "description": "",
-            "schema": { "$ref": "#/definitions/Series" }
+            "schema": {
+              "$ref": "#/definitions/Series"
+            }
           },
-          "404": { "description": "Not Found" }
+          "404": {
+            "description": "Not Found"
+          }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -279,6 +342,13 @@
             "type": "string"
           },
           {
+            "name": "ordering",
+            "in": "query",
+            "description": "정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,name)",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "series_id",
             "in": "path",
             "description": "에피소드가 속한 시리즈의 ID",
@@ -291,10 +361,15 @@
           "200": {
             "description": "",
             "schema": {
-              "required": ["count", "results"],
+              "required": [
+                "count",
+                "results"
+              ],
               "type": "object",
               "properties": {
-                "count": { "type": "integer" },
+                "count": {
+                  "type": "integer"
+                },
                 "next": {
                   "type": "string",
                   "format": "uri",
@@ -307,13 +382,17 @@
                 },
                 "results": {
                   "type": "array",
-                  "items": { "$ref": "#/definitions/Episode" }
+                  "items": {
+                    "$ref": "#/definitions/Episode"
+                  }
                 }
               }
             }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -332,10 +411,14 @@
         "responses": {
           "207": {
             "description": "",
-            "schema": { "$ref": "#/definitions/EpisodeCreateResponse" }
+            "schema": {
+              "$ref": "#/definitions/EpisodeCreateResponse"
+            }
           }
         },
-        "tags": ["crawler"]
+        "tags": [
+          "crawler"
+        ]
       },
       "parameters": [
         {
@@ -363,11 +446,17 @@
         "responses": {
           "200": {
             "description": "",
-            "schema": { "$ref": "#/definitions/CommentEmotionAnalysis" }
+            "schema": {
+              "$ref": "#/definitions/CommentEmotionAnalysis"
+            }
           },
-          "404": { "description": "Not Found" }
+          "404": {
+            "description": "Not Found"
+          }
         },
-        "tags": ["llm"]
+        "tags": [
+          "llm"
+        ]
       },
       "post": {
         "operationId": "llm_api_emotion-analysis_create",
@@ -385,11 +474,17 @@
         "responses": {
           "201": {
             "description": "",
-            "schema": { "$ref": "#/definitions/CommentEmotionAnalysis" }
+            "schema": {
+              "$ref": "#/definitions/CommentEmotionAnalysis"
+            }
           },
-          "400": { "description": "Bad Request" }
+          "400": {
+            "description": "Bad Request"
+          }
         },
-        "tags": ["llm"]
+        "tags": [
+          "llm"
+        ]
       },
       "parameters": [
         {
@@ -415,10 +510,16 @@
           }
         ],
         "responses": {
-          "204": { "description": "삭제 성공 (No Content)" },
-          "404": { "description": "Not Found" }
+          "204": {
+            "description": "삭제 성공 (No Content)"
+          },
+          "404": {
+            "description": "Not Found"
+          }
         },
-        "tags": ["llm"]
+        "tags": [
+          "llm"
+        ]
       },
       "parameters": [
         {
@@ -434,8 +535,14 @@
         "operationId": "llm_api_summary-analysis_create",
         "description": "Create a summary of comment emotion analysis results.",
         "parameters": [],
-        "responses": { "201": { "description": "" } },
-        "tags": ["llm"]
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "llm"
+        ]
       },
       "parameters": [
         {
@@ -455,16 +562,22 @@
             "name": "data",
             "in": "body",
             "required": true,
-            "schema": { "$ref": "#/definitions/TokenObtainPair" }
+            "schema": {
+              "$ref": "#/definitions/TokenObtainPair"
+            }
           }
         ],
         "responses": {
           "200": {
             "description": "",
-            "schema": { "$ref": "#/definitions/CustomTokenObtainPair" }
+            "schema": {
+              "$ref": "#/definitions/CustomTokenObtainPair"
+            }
           }
         },
-        "tags": ["token"]
+        "tags": [
+          "token"
+        ]
       },
       "parameters": []
     },
@@ -477,16 +590,22 @@
             "name": "data",
             "in": "body",
             "required": true,
-            "schema": { "$ref": "#/definitions/TokenRefresh" }
+            "schema": {
+              "$ref": "#/definitions/TokenRefresh"
+            }
           }
         ],
         "responses": {
           "201": {
             "description": "",
-            "schema": { "$ref": "#/definitions/TokenRefresh" }
+            "schema": {
+              "$ref": "#/definitions/TokenRefresh"
+            }
           }
         },
-        "tags": ["token"]
+        "tags": [
+          "token"
+        ]
       },
       "parameters": []
     },
@@ -500,11 +619,15 @@
             "description": "",
             "schema": {
               "type": "array",
-              "items": { "$ref": "#/definitions/CustomUser" }
+              "items": {
+                "$ref": "#/definitions/CustomUser"
+              }
             }
           }
         },
-        "tags": ["user"]
+        "tags": [
+          "user"
+        ]
       },
       "parameters": []
     }
@@ -534,7 +657,11 @@
           "maxLength": 100,
           "minLength": 1
         },
-        "image_src": { "title": "Image src", "type": "string", "minLength": 1 },
+        "image_src": {
+          "title": "Image src",
+          "type": "string",
+          "minLength": 1
+        },
         "category": {
           "title": "Category",
           "type": "string",
@@ -547,8 +674,14 @@
           "maxLength": 20,
           "minLength": 1
         },
-        "series": { "title": "Series", "type": "integer" },
-        "user": { "title": "User", "type": "integer" }
+        "series": {
+          "title": "Series",
+          "type": "integer"
+        },
+        "user": {
+          "title": "User",
+          "type": "integer"
+        }
       }
     },
     "Comment": {
@@ -571,13 +704,20 @@
           "maximum": 2147483647,
           "minimum": -2147483648
         },
-        "content": { "title": "Content", "type": "string", "minLength": 1 },
+        "content": {
+          "title": "Content",
+          "type": "string",
+          "minLength": 1
+        },
         "created_at": {
           "title": "Created at",
           "type": "string",
           "format": "date-time"
         },
-        "is_best": { "title": "Is best", "type": "boolean" },
+        "is_best": {
+          "title": "Is best",
+          "type": "boolean"
+        },
         "like_count": {
           "title": "Like count",
           "type": "integer",
@@ -606,29 +746,69 @@
           "maximum": 2147483647,
           "minimum": -2147483648
         },
-        "series": { "title": "Series", "type": "integer" },
-        "episode": { "title": "Episode", "type": "integer" }
+        "ai_category": {
+          "title": "Ai category",
+          "type": "string",
+          "maxLength": 100,
+          "x-nullable": true
+        },
+        "ai_reason": {
+          "title": "Ai reason",
+          "type": "string",
+          "x-nullable": true
+        },
+        "is_ai_processed": {
+          "title": "Is ai processed",
+          "type": "boolean"
+        },
+        "ai_processed_at": {
+          "title": "Ai processed at",
+          "type": "string",
+          "format": "date-time",
+          "x-nullable": true
+        },
+        "series": {
+          "title": "Series",
+          "type": "integer"
+        },
+        "episode": {
+          "title": "Episode",
+          "type": "integer"
+        }
       }
     },
     "EpisodeCreateResponse": {
-      "required": ["created_data", "errors_items"],
+      "required": [
+        "created_data",
+        "errors_items"
+      ],
       "type": "object",
       "properties": {
         "created_data": {
           "type": "array",
-          "items": { "$ref": "#/definitions/Episode" }
+          "items": {
+            "$ref": "#/definitions/Episode"
+          }
         },
         "errors_items": {
           "type": "array",
           "items": {
             "type": "object",
-            "additionalProperties": { "type": "string", "x-nullable": true }
+            "additionalProperties": {
+              "type": "string",
+              "x-nullable": true
+            }
           }
         }
       }
     },
     "Series": {
-      "required": ["id", "title", "image_src", "user"],
+      "required": [
+        "id",
+        "title",
+        "image_src",
+        "user"
+      ],
       "type": "object",
       "properties": {
         "id": {
@@ -643,20 +823,40 @@
           "maxLength": 100,
           "minLength": 1
         },
-        "image_src": { "title": "Image src", "type": "string", "minLength": 1 },
-        "user": { "title": "User", "type": "integer" }
+        "image_src": {
+          "title": "Image src",
+          "type": "string",
+          "minLength": 1
+        },
+        "user": {
+          "title": "User",
+          "type": "integer"
+        }
       }
     },
     "SeriesCreate": {
-      "required": ["id"],
-      "type": "object",
-      "properties": { "id": { "title": "Id", "type": "integer" } }
-    },
-    "CommentEmotionAnalysis": {
-      "required": ["comment"],
+      "required": [
+        "id"
+      ],
       "type": "object",
       "properties": {
-        "id": { "title": "ID", "type": "integer", "readOnly": true },
+        "id": {
+          "title": "Id",
+          "type": "integer"
+        }
+      }
+    },
+    "CommentEmotionAnalysis": {
+      "required": [
+        "comment"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
         "content": {
           "title": "Content",
           "type": "string",
@@ -675,30 +875,61 @@
           "format": "date-time",
           "readOnly": true
         },
-        "comment": { "title": "Comment", "type": "integer" }
+        "comment": {
+          "title": "Comment",
+          "type": "integer"
+        }
       }
     },
     "TokenObtainPair": {
-      "required": ["username", "password"],
+      "required": [
+        "username",
+        "password"
+      ],
       "type": "object",
       "properties": {
-        "username": { "title": "Username", "type": "string", "minLength": 1 },
-        "password": { "title": "Password", "type": "string", "minLength": 1 }
+        "username": {
+          "title": "Username",
+          "type": "string",
+          "minLength": 1
+        },
+        "password": {
+          "title": "Password",
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "CustomTokenObtainPair": {
-      "required": ["access", "refresh"],
+      "required": [
+        "access",
+        "refresh"
+      ],
       "type": "object",
       "properties": {
-        "access": { "title": "Access", "type": "string", "minLength": 1 },
-        "refresh": { "title": "Refresh", "type": "string", "minLength": 1 }
+        "access": {
+          "title": "Access",
+          "type": "string",
+          "minLength": 1
+        },
+        "refresh": {
+          "title": "Refresh",
+          "type": "string",
+          "minLength": 1
+        }
       }
     },
     "TokenRefresh": {
-      "required": ["refresh"],
+      "required": [
+        "refresh"
+      ],
       "type": "object",
       "properties": {
-        "refresh": { "title": "Refresh", "type": "string", "minLength": 1 },
+        "refresh": {
+          "title": "Refresh",
+          "type": "string",
+          "minLength": 1
+        },
         "access": {
           "title": "Access",
           "type": "string",
@@ -708,7 +939,10 @@
       }
     },
     "CustomUser": {
-      "required": ["username", "name"],
+      "required": [
+        "username",
+        "name"
+      ],
       "type": "object",
       "properties": {
         "username": {

@@ -19,4 +19,8 @@ offset?: number;
  * 불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)
  */
 fields?: string;
+/**
+ * 정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,title)
+ */
+ordering?: string;
 };

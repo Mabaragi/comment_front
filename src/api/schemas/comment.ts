@@ -36,6 +36,16 @@ export interface Comment {
    * @maximum 2147483647
    */
   user_uid: number;
+  /**
+   * @maxLength 100
+   * @nullable
+   */
+  ai_category?: string | null;
+  /** @nullable */
+  ai_reason?: string | null;
+  is_ai_processed?: boolean;
+  /** @nullable */
+  ai_processed_at?: string | null;
   series: number;
   episode: number;
 }

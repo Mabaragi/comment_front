@@ -1,7 +1,7 @@
-import React from 'react';
 import type { Comment } from '@/types/comments';
 import { format, parseISO } from 'date-fns';
 import { Heart } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 interface Props {
@@ -23,20 +23,27 @@ export default function CommentListItem({ comment }: Props) {
             <div className="flex flex-col w-full ml-3">
               <div className="flex justify-between items-center w-full">
                 <div className="flex items-center gap-1">
-                  {comment.is_best && (
-                    <div className="bg-red-500 rounded-sm flex items-center h-5 px-1">
-                      <span className="text-[11px] font-bold text-white leading-none">
-                        BEST
-                      </span>
-                    </div>
-                  )}
                   <span className="text-[13px]">{comment.user_name}</span>
-                  <div className="bg-zinc-300 rounded-sm flex items-center h-5 pl-1 pr-1.5 gap-[3px]">
+                  {comment.is_best && (
+                    // <div className="bg-red-500 rounded-sm flex items-center h-5 px-1">
+                    //   <span className="text-[11px] font-bold text-white leading-none">
+                    //     BEST
+                    //   </span>
+                    // </div>
+                    <Badge variant="destructive">BEST</Badge>
+                  )}
+
+                  {/* <div className="bg-zinc-300 rounded-sm flex items-center h-5 pl-1 pr-1.5 gap-[3px]">
                     <Heart className="w-4 h-4 text-gray-600" />
                     <span className="text-[12px] text-gray-600 leading-none">
                       {comment.like_count?.toLocaleString()}개
                     </span>
-                  </div>
+                  </div> */}
+                  <Badge variant="outline">
+                    <Heart className="w-4 h-4 text-gray-600" />
+                    {comment.like_count?.toLocaleString()}개
+                  </Badge>
+                  <Badge variant="secondary">감정점수: 50점</Badge>
                 </div>
                 <span className="text-xs">
                   {format(parseISO(comment.created_at), 'yy.MM.dd')}
