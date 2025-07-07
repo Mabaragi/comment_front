@@ -13,6 +13,7 @@ export * from './crawlerEpisodeCommentList200';
 export * from './crawlerEpisodeCommentListParams';
 export * from './crawlerSeriesEpisodeList200';
 export * from './crawlerSeriesEpisodeListParams';
+export * from './crawlerSeriesList200';
 export * from './crawlerSeriesListParams';
 export * from './customTokenObtainPair';
 export * from './customUser';

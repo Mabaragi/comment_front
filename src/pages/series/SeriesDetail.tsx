@@ -43,7 +43,7 @@ export default function SeriesDetail({
         */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l rounded-lg overflow-hidden">
         {episodes.map((ep) => {
-          return <EpisodeCard episode={ep} seriesId={series.id} />;
+          return <EpisodeCard key={ep.id} episode={ep} seriesId={series.id} />;
         })}
         {isEpisodeLoading &&
           Array.from({ length: 3 }).map((_, i) => (

@@ -8,13 +8,13 @@
 
 export type CrawlerEpisodeCommentListParams = {
 /**
- * Number of results to return per page.
+ * 페이지 번호
  */
-limit?: number;
+page?: number;
 /**
- * The initial index from which to return the results.
+ * 페이지당 항목 수 (최대 100)
  */
-offset?: number;
+page_size?: number;
 /**
  * 불러올 필드 이름을 쉼표로 구분하여 지정 (예: id,name,image_src)
  */
@@ -23,4 +23,8 @@ fields?: string;
  * 정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,content)
  */
 ordering?: string;
+/**
+ * 전체 댓글 개수를 포함할지 여부 (true/false). 성능 향상을 위해 필요시에만 사용하세요.
+ */
+include_count?: boolean;
 };

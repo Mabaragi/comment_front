@@ -30,6 +30,7 @@ import type {
   CrawlerEpisodeCommentListParams,
   CrawlerSeriesEpisodeList200,
   CrawlerSeriesEpisodeListParams,
+  CrawlerSeriesList200,
   CrawlerSeriesListParams,
   CustomTokenObtainPair,
   CustomUser,
@@ -319,7 +320,7 @@ export const crawlerSeriesList = (
 ) => {
       
       
-      return axiosInstance<Series[]>(
+      return axiosInstance<CrawlerSeriesList200>(
       {url: `/crawler/series/`, method: 'GET',
         params, signal
     },

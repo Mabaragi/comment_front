@@ -40,7 +40,10 @@ export default function CommentListContainer() {
     isLoading: isEpisodeLoading,
     isError: isEpisodeError,
     refetch,
-  } = useCommentInfiniteList(productIdString, { ordering: sortMap[sort] });
+  } = useCommentInfiniteList(productIdString, {
+    ordering: sortMap[sort],
+    include_count: true,
+  });
 
   const commentCount =
     commentQueryResponse?.pages.flatMap((page) => page.count)[0] || 0;

@@ -13,16 +13,10 @@
     "version": "v1"
   },
   "host": "localhost:8000",
-  "schemes": [
-    "http"
-  ],
+  "schemes": ["http"],
   "basePath": "/",
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "securityDefinitions": {
     "Bearer": {
       "type": "apiKey",
@@ -62,9 +56,7 @@
             "description": "Not Found"
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -81,18 +73,18 @@
         "description": "에피소드 댓글 목록을 조회하는 API 뷰입니다.",
         "parameters": [
           {
-            "name": "limit",
+            "name": "page",
             "in": "query",
-            "description": "Number of results to return per page.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지 번호",
+            "type": "integer",
+            "default": 1
           },
           {
-            "name": "offset",
+            "name": "page_size",
             "in": "query",
-            "description": "The initial index from which to return the results.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지당 항목 수 (최대 100)",
+            "type": "integer",
+            "default": 20
           },
           {
             "name": "fields",
@@ -115,16 +107,20 @@
             "required": true,
             "type": "integer",
             "default": "61823562"
+          },
+          {
+            "name": "include_count",
+            "in": "query",
+            "description": "전체 댓글 개수를 포함할지 여부 (true/false). 성능 향상을 위해 필요시에만 사용하세요.",
+            "type": "boolean",
+            "default": false
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "required": [
-                "count",
-                "results"
-              ],
+              "required": ["count", "results"],
               "type": "object",
               "properties": {
                 "count": {
@@ -150,9 +146,7 @@
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -185,9 +179,7 @@
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -204,18 +196,18 @@
         "description": "Retrieve a list of series",
         "parameters": [
           {
-            "name": "limit",
+            "name": "page",
             "in": "query",
-            "description": "Number of results to return per page.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지 번호",
+            "type": "integer",
+            "default": 1
           },
           {
-            "name": "offset",
+            "name": "page_size",
             "in": "query",
-            "description": "The initial index from which to return the results.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지당 항목 수 (최대 100)",
+            "type": "integer",
+            "default": 20
           },
           {
             "name": "fields",
@@ -230,22 +222,46 @@
             "description": "정렬할 필드 이름을 쉼표로 구분하여 지정. '-'를 앞에 붙이면 내림차순 (예: id,-created_at,title)",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "include_count",
+            "in": "query",
+            "description": "전체 시리즈 개수를 포함할지 여부 (true/false). 성능 향상을 위해 필요시에만 사용하세요.",
+            "type": "boolean",
+            "default": false
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Series"
+              "required": ["count", "results"],
+              "type": "object",
+              "properties": {
+                "count": {
+                  "type": "integer"
+                },
+                "next": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "previous": {
+                  "type": "string",
+                  "format": "uri",
+                  "x-nullable": true
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Series"
+                  }
+                }
               }
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": []
     },
@@ -271,9 +287,7 @@
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": []
     },
@@ -302,9 +316,7 @@
             "description": "Not Found"
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -321,18 +333,18 @@
         "description": "에피소드 목록을 조회하는 API 뷰입니다.",
         "parameters": [
           {
-            "name": "limit",
+            "name": "page",
             "in": "query",
-            "description": "Number of results to return per page.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지 번호",
+            "type": "integer",
+            "default": 1
           },
           {
-            "name": "offset",
+            "name": "page_size",
             "in": "query",
-            "description": "The initial index from which to return the results.",
-            "required": false,
-            "type": "integer"
+            "description": "페이지당 항목 수 (최대 100)",
+            "type": "integer",
+            "default": 20
           },
           {
             "name": "fields",
@@ -355,16 +367,20 @@
             "required": true,
             "type": "integer",
             "default": "61822163"
+          },
+          {
+            "name": "include_count",
+            "in": "query",
+            "description": "전체 에피소드 개수를 포함할지 여부 (true/false). 성능 향상을 위해 필요시에만 사용하세요.",
+            "type": "boolean",
+            "default": false
           }
         ],
         "responses": {
           "200": {
             "description": "",
             "schema": {
-              "required": [
-                "count",
-                "results"
-              ],
+              "required": ["count", "results"],
               "type": "object",
               "properties": {
                 "count": {
@@ -390,9 +406,7 @@
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -416,9 +430,7 @@
             }
           }
         },
-        "tags": [
-          "crawler"
-        ]
+        "tags": ["crawler"]
       },
       "parameters": [
         {
@@ -454,9 +466,7 @@
             "description": "Not Found"
           }
         },
-        "tags": [
-          "llm"
-        ]
+        "tags": ["llm"]
       },
       "post": {
         "operationId": "llm_api_emotion-analysis_create",
@@ -482,9 +492,7 @@
             "description": "Bad Request"
           }
         },
-        "tags": [
-          "llm"
-        ]
+        "tags": ["llm"]
       },
       "parameters": [
         {
@@ -517,9 +525,7 @@
             "description": "Not Found"
           }
         },
-        "tags": [
-          "llm"
-        ]
+        "tags": ["llm"]
       },
       "parameters": [
         {
@@ -540,9 +546,7 @@
             "description": ""
           }
         },
-        "tags": [
-          "llm"
-        ]
+        "tags": ["llm"]
       },
       "parameters": [
         {
@@ -575,9 +579,7 @@
             }
           }
         },
-        "tags": [
-          "token"
-        ]
+        "tags": ["token"]
       },
       "parameters": []
     },
@@ -603,9 +605,7 @@
             }
           }
         },
-        "tags": [
-          "token"
-        ]
+        "tags": ["token"]
       },
       "parameters": []
     },
@@ -625,9 +625,7 @@
             }
           }
         },
-        "tags": [
-          "user"
-        ]
+        "tags": ["user"]
       },
       "parameters": []
     }
@@ -778,10 +776,7 @@
       }
     },
     "EpisodeCreateResponse": {
-      "required": [
-        "created_data",
-        "errors_items"
-      ],
+      "required": ["created_data", "errors_items"],
       "type": "object",
       "properties": {
         "created_data": {
@@ -803,12 +798,7 @@
       }
     },
     "Series": {
-      "required": [
-        "id",
-        "title",
-        "image_src",
-        "user"
-      ],
+      "required": ["id", "title", "image_src", "user"],
       "type": "object",
       "properties": {
         "id": {
@@ -835,9 +825,7 @@
       }
     },
     "SeriesCreate": {
-      "required": [
-        "id"
-      ],
+      "required": ["id"],
       "type": "object",
       "properties": {
         "id": {
@@ -847,9 +835,7 @@
       }
     },
     "CommentEmotionAnalysis": {
-      "required": [
-        "comment"
-      ],
+      "required": ["comment"],
       "type": "object",
       "properties": {
         "id": {
@@ -882,10 +868,7 @@
       }
     },
     "TokenObtainPair": {
-      "required": [
-        "username",
-        "password"
-      ],
+      "required": ["username", "password"],
       "type": "object",
       "properties": {
         "username": {
@@ -901,10 +884,7 @@
       }
     },
     "CustomTokenObtainPair": {
-      "required": [
-        "access",
-        "refresh"
-      ],
+      "required": ["access", "refresh"],
       "type": "object",
       "properties": {
         "access": {
@@ -920,9 +900,7 @@
       }
     },
     "TokenRefresh": {
-      "required": [
-        "refresh"
-      ],
+      "required": ["refresh"],
       "type": "object",
       "properties": {
         "refresh": {
@@ -939,10 +917,7 @@
       }
     },
     "CustomUser": {
-      "required": [
-        "username",
-        "name"
-      ],
+      "required": ["username", "name"],
       "type": "object",
       "properties": {
         "username": {

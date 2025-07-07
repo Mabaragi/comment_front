@@ -30,7 +30,14 @@ function ErrorState({ message }: { message: string }) {
 }
 
 export default function SeriesListContainer() {
-  const { data: series, isLoading, isError, error } = useSeriesList();
+  const {
+    data: seriesQueryResponse,
+    isLoading,
+    isError,
+    error,
+  } = useSeriesList({ page_size: 100 });
+
+  const series = seriesQueryResponse?.results;
 
   if (isLoading) {
     return <SeriesListSkeleton />;
