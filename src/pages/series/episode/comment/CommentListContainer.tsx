@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import CommentListItem from './CommentListItem';
 import { useCommentInfiniteList } from '@/hooks/useComment';
 import { VirtuosoGrid } from 'react-virtuoso';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import { useCrawlComment } from '@/hooks/useCrawler';
 
 // select ui components
@@ -33,6 +33,12 @@ export default function CommentListContainer() {
     oldest: 'created_at',
   } as const;
 
+  const sortDisplayMap = {
+    latest: '최신순',
+    oldest: '등록순',
+    popularity: '인기순',
+  };
+
   const {
     data: commentQueryResponse,
     fetchNextPage,
@@ -45,23 +51,33 @@ export default function CommentListContainer() {
     include_count: true,
   });
 
-  const commentCount =
-    commentQueryResponse?.pages.flatMap((page) => page.count)[0] || 0;
+  const commentCount = useMemo(
+    () => commentQueryResponse?.pages[0]?.count || 0,
+    [],
+  );
   const comments =
     commentQueryResponse?.pages.flatMap((page) => page.results) || [];
 
-  if (!comments) {
-    const crawlCommentMutation = useCrawlComment({
-      mutation: {
-        onSuccess: () => {
-          refetch();
-        },
+  const crawlCommentMutation = useCrawlComment({
+    mutation: {
+      onSuccess: () => {
+        refetch();
       },
-    });
-    crawlCommentMutation.mutate({
-      productId: productIdString,
-    });
-  }
+    },
+  });
+
+  useEffect(() => {
+    if (!isEpisodeLoading && comments.length === 0) {
+      crawlCommentMutation.mutate({
+        productId: productIdString,
+      });
+    }
+  }, [
+    isEpisodeLoading,
+    comments.length,
+    productIdString,
+    crawlCommentMutation,
+  ]);
 
   useEffect(() => {
     // 컴포넌트가 언마운트될 때 스크롤 위치 저장
@@ -84,13 +100,7 @@ export default function CommentListContainer() {
           }
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue>
-              {sort === 'latest'
-                ? '최신순'
-                : sort === 'oldest'
-                ? '등록순'
-                : '인기순'}
-            </SelectValue>
+            <SelectValue>{sortDisplayMap[sort]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="latest">최신순</SelectItem>
