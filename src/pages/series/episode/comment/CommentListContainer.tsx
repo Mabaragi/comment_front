@@ -90,8 +90,8 @@ export default function CommentListContainer() {
     Number(sessionStorage.getItem(scrollStateKey)) || 0;
 
   return (
-    <>
-      <div className="flex items-center justify-between mx-2">
+    <div className="flex flex-col flex-1">
+      <div className="flex items-center justify-between mx-2 flex-shrink-0">
         <div>댓글 개수: {commentCount}</div>
         <Select
           value={sort}
@@ -109,21 +109,22 @@ export default function CommentListContainer() {
           </SelectContent>
         </Select>
       </div>
-
-      <VirtuosoGrid
-        style={{ height: '83.6vh', width: '100%' }}
-        totalCount={comments.length}
-        endReached={() => {
-          if (hasNextPage && !isEpisodeLoading) fetchNextPage();
-        }}
-        listClassName="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 items-stretch gap-1 bg-zinc-100"
-        itemContent={(index) => <CommentListItem comment={comments[index]} />}
-        initialTopMostItemIndex={initialTopMostItemIndex}
-        rangeChanged={({ startIndex }) => {
-          console.log('rangeChanged', startIndex);
-          scrollIndexRef.current = startIndex;
-        }}
-      />
-    </>
+      <div className="flex-1 min-h-0">
+        <VirtuosoGrid
+          style={{ height: '100%', width: '100%' }}
+          totalCount={comments.length}
+          endReached={() => {
+            if (hasNextPage && !isEpisodeLoading) fetchNextPage();
+          }}
+          listClassName="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 items-stretch gap-1 bg-zinc-100"
+          itemContent={(index) => <CommentListItem comment={comments[index]} />}
+          initialTopMostItemIndex={initialTopMostItemIndex}
+          rangeChanged={({ startIndex }) => {
+            console.log('rangeChanged', startIndex);
+            scrollIndexRef.current = startIndex;
+          }}
+        />
+      </div>
+    </div>
   );
 }

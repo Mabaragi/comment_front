@@ -49,8 +49,8 @@ function App() {
             </Route>
             {/* 시리즈 상세 페이지 */}
             {/* 로그인 페이지 */}
-            <Route path="/login" element={<LoginPage />} />
           </Route>
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
     </QueryClientProvider>
