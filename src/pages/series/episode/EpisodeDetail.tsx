@@ -1,5 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CommentsListContainer from './comment/CommentListContainer';
+import CommentSummary from './comment/CommentSummary';
 
 function MyTabTrigger({
   value,
@@ -34,7 +35,9 @@ export default function EpisodeDetail() {
         <CommentsListContainer />
       </TabsContent>
       <TabsContent value="comment-analysis"></TabsContent>
-      <TabsContent value="comment-stats"></TabsContent>
+      <TabsContent value="comment-stats">
+        <CommentSummary />
+      </TabsContent>
     </Tabs>
   );
 }
