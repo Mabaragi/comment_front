@@ -1,12 +1,9 @@
-import { useParams } from 'react-router-dom';
-import CommentListItem from './CommentListItem';
-import { useCommentInfiniteList } from '@/hooks/useComment';
-import { VirtuosoGrid } from 'react-virtuoso';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState, useMemo } from 'react';
+import { VirtuosoGrid } from 'react-virtuoso';
+import { useCommentInfiniteList } from '@/hooks/useComment';
 import { useCrawlComment } from '@/hooks/useCrawler';
-import { useNavigate } from 'react-router-dom';
-
-// select ui components
+import CommentListItem from './CommentListItem';
 import {
   Select,
   SelectContent,
@@ -15,90 +12,91 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-export default function CommentListContainer() {
-  const [sort, setSort] = useState<'latest' | 'oldest' | 'popularity'>(
-    'latest',
-  );
+type SortOption = 'latest' | 'oldest' | 'popularity';
 
+// 상수 정의
+const SORT_MAP = {
+  latest: '-created_at',
+  popularity: '-like_count',
+  oldest: 'created_at',
+} as const;
+
+const SORT_DISPLAY_MAP = {
+  latest: '최신순',
+  oldest: '등록순',
+  popularity: '인기순',
+} as const;
+
+export default function CommentListContainer() {
+  const navigate = useNavigate();
   const { episodeId: productIdString } = useParams() as { episodeId: string };
+
+  // 상태 관리
+  const [sort, setSort] = useState<SortOption>('latest');
+
+  // 스크롤 관리
   const scrollIndexRef = useRef(0);
   const scrollStateKey = `comment-scroll-position-${productIdString}`;
 
-  const handleSortChange = (value: 'latest' | 'oldest' | 'popularity') => {
+  const handleSortChange = (value: SortOption) => {
     setSort(value);
   };
 
-  const sortMap = {
-    latest: '-created_at',
-    popularity: '-like_count',
-    oldest: 'created_at',
-  } as const;
-
-  const sortDisplayMap = {
-    latest: '최신순',
-    oldest: '등록순',
-    popularity: '인기순',
-  };
-
+  // React Query 훅
   const {
     data: commentQueryResponse,
     fetchNextPage,
     hasNextPage,
     isLoading: isEpisodeLoading,
-    isError: isEpisodeError,
     refetch,
   } = useCommentInfiniteList(productIdString, {
-    ordering: sortMap[sort],
+    ordering: SORT_MAP[sort],
     include_count: true,
   });
 
+  // 계산된 값들
   const commentCount = useMemo(
     () => commentQueryResponse?.pages[0]?.count || 0,
-    [],
+    [commentQueryResponse?.pages],
   );
-  const comments =
-    commentQueryResponse?.pages.flatMap((page) => page.results) || [];
+  const comments = useMemo(
+    () => commentQueryResponse?.pages.flatMap((page) => page.results) || [],
+    [commentQueryResponse?.pages],
+  );
 
-  // const [crawlFailed, setCrawlFailed] = useState(false);
-
+  // 크롤링 뮤테이션
   const crawlCommentMutation = useCrawlComment({
     mutation: {
       onSuccess: () => {
         refetch();
       },
       onError: () => {
-        console.log('크롤링 실패');
-
         navigate('/notfound', { replace: true });
       },
     },
   });
 
+  // 초기 크롤링 시도
   useEffect(() => {
     if (!isEpisodeLoading && comments.length === 0) {
       crawlCommentMutation.mutate({
         productId: productIdString,
       });
     }
-  }, []);
+  }, [isEpisodeLoading, comments.length, productIdString]);
 
-  // 에피소드가 없을경우 리다이렉트
-  const navigate = useNavigate();
+  // 스크롤 위치 관리
   useEffect(() => {
-    if (isEpisodeError) {
-      navigate('/notfound', { replace: true });
-    }
-  }, [isEpisodeError, navigate]);
-
-  useEffect(() => {
-    // 컴포넌트가 언마운트될 때 스크롤 위치 저장
     return () => {
       sessionStorage.setItem(scrollStateKey, String(scrollIndexRef.current));
     };
   }, [scrollStateKey]);
 
-  const initialTopMostItemIndex =
-    Number(sessionStorage.getItem(scrollStateKey)) || 0;
+  // 스크롤 복원
+  const initialTopMostItemIndex = useMemo(
+    () => Number(sessionStorage.getItem(scrollStateKey)) || 0,
+    [scrollStateKey],
+  );
 
   return (
     <div className="flex flex-col flex-1">
@@ -111,7 +109,7 @@ export default function CommentListContainer() {
           }
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue>{sortDisplayMap[sort]}</SelectValue>
+            <SelectValue>{SORT_DISPLAY_MAP[sort]}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="latest">최신순</SelectItem>
