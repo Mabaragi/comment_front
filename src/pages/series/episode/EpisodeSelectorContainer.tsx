@@ -8,7 +8,7 @@ type Props = {
 
 export default function EpisodeSelectorContainer({ seriesId }: Props) {
   const { data } = useSeriesEpisodeList(seriesId.toString(), {
-    limit: 9999,
+    page: 9999,
   });
   const episodeNums =
     data?.results.map((episode) => ({ id: episode.id, name: episode.name })) ||

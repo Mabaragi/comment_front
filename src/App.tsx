@@ -9,6 +9,7 @@ import MainPage from './pages/main/MainPage';
 import SeriesListContainer from './pages/series/SeriesListContainer';
 import SeriesDetailContainer from './pages/series/SeriesDetailContainer';
 import EpisodeDetailContainer from './pages/series/episode/EpisodeDetailContainer';
+import NotFoundPage from './pages/NotFoundPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,7 +51,8 @@ function App() {
             {/* 시리즈 상세 페이지 */}
             {/* 로그인 페이지 */}
           </Route>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginPage />} />\
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
     </QueryClientProvider>

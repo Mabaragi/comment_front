@@ -12,7 +12,7 @@ export type CrawlerSeriesEpisodeListParams = {
  */
 page?: number;
 /**
- * 페이지당 항목 수 (최대 100)
+ * 페이지당 항목 수 (최대 10000)
  */
 page_size?: number;
 /**

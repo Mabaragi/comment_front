@@ -7,6 +7,72 @@ import { useRef, useEffect } from 'react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useNavigate } from 'react-router-dom';
+import { useInfiniteScroll } from '@/hooks/hooks';
+
+function EmptyState({ message }: { message: string }) {
+  return (
+    <div className="container mx-auto px-4 py-8 text-center text-gray-500">
+      <p>{message}</p>
+    </div>
+  );
+}
+
+export default function SeriesDetailContainer() {
+  const { seriesId: seriesIdString } = useParams() as { seriesId: string };
+
+  const {
+    data: series,
+    isLoading: isSeriesLoading,
+    isError: isSeriesError,
+    error: seriesError,
+  } = useSeries(seriesIdString);
+  const {
+    data: episodeQueryResponse,
+    fetchNextPage,
+    hasNextPage,
+    isLoading: isEpisodeLoading,
+    isError: isEpisodeError,
+  } = useEpisodeInfiniteList(seriesIdString);
+
+  const loadMoreRef = useInfiniteScroll({
+    fetchNextPage,
+    hasNextPage,
+    isLoading: isEpisodeLoading,
+  });
+
+  const episodes =
+    episodeQueryResponse?.pages.flatMap((page) => page.results) || [];
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isSeriesError && seriesError && (seriesError as any).status === 404) {
+      navigate('/notfound', { replace: true });
+    }
+  }, [isSeriesError, seriesError, navigate]);
+
+  if (isSeriesLoading) {
+    return <SeriesDetailSkeleton />;
+  }
+
+  if (isSeriesError || isEpisodeError) {
+    return <ErrorState onRetry={() => window.location.reload()} />;
+  }
+
+  if (!series) {
+    return <EmptyState message="시리즈를 찾을 수 없습니다." />;
+  }
+
+  return (
+    <SeriesDetail
+      series={series}
+      episodes={episodes}
+      observerRef={loadMoreRef}
+      isEpisodeLoading={isEpisodeLoading}
+    />
+  );
+}
 
 function SeriesDetailSkeleton() {
   return (
@@ -43,76 +109,5 @@ function ErrorState({ onRetry }: { onRetry: () => void }) {
         다시 시도
       </Button>
     </div>
-  );
-}
-
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="container mx-auto px-4 py-8 text-center text-gray-500">
-      <p>{message}</p>
-    </div>
-  );
-}
-
-export default function SeriesDetailContainer() {
-  const { seriesId: seriesIdString } = useParams() as { seriesId: string };
-
-  const {
-    data: series,
-    isLoading: isSeriesLoading,
-    isError: isSeriesError,
-  } = useSeries(seriesIdString);
-  const {
-    data: episodeQueryResponse,
-    fetchNextPage,
-    hasNextPage,
-    isLoading: isEpisodeLoading,
-    isError: isEpisodeError,
-  } = useEpisodeInfiniteList(seriesIdString);
-
-  const loadMoreRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isEpisodeLoading) {
-          fetchNextPage();
-        }
-      },
-      {
-        threshold: 1.0,
-      },
-    );
-
-    const current = loadMoreRef.current;
-    if (current) observer.observe(current);
-
-    return () => {
-      if (current) observer.unobserve(current);
-    };
-  }, [hasNextPage, fetchNextPage, isEpisodeLoading]);
-
-  const episodes =
-    episodeQueryResponse?.pages.flatMap((page) => page.results) || [];
-
-  if (isSeriesLoading) {
-    return <SeriesDetailSkeleton />;
-  }
-
-  if (isSeriesError || isEpisodeError) {
-    return <ErrorState onRetry={() => window.location.reload()} />;
-  }
-
-  if (!series) {
-    return <EmptyState message="시리즈를 찾을 수 없습니다." />;
-  }
-
-  return (
-    <SeriesDetail
-      series={series}
-      episodes={episodes}
-      observerRef={loadMoreRef}
-      isEpisodeLoading={isEpisodeLoading}
-    />
   );
 }

@@ -4,6 +4,7 @@ import { useCommentInfiniteList } from '@/hooks/useComment';
 import { VirtuosoGrid } from 'react-virtuoso';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { useCrawlComment } from '@/hooks/useCrawler';
+import { useNavigate } from 'react-router-dom';
 
 // select ui components
 import {
@@ -58,10 +59,17 @@ export default function CommentListContainer() {
   const comments =
     commentQueryResponse?.pages.flatMap((page) => page.results) || [];
 
+  // const [crawlFailed, setCrawlFailed] = useState(false);
+
   const crawlCommentMutation = useCrawlComment({
     mutation: {
       onSuccess: () => {
         refetch();
+      },
+      onError: () => {
+        console.log('크롤링 실패');
+
+        navigate('/notfound', { replace: true });
       },
     },
   });
@@ -72,12 +80,15 @@ export default function CommentListContainer() {
         productId: productIdString,
       });
     }
-  }, [
-    isEpisodeLoading,
-    comments.length,
-    productIdString,
-    crawlCommentMutation,
-  ]);
+  }, []);
+
+  // 에피소드가 없을경우 리다이렉트
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (isEpisodeError) {
+      navigate('/notfound', { replace: true });
+    }
+  }, [isEpisodeError, navigate]);
 
   useEffect(() => {
     // 컴포넌트가 언마운트될 때 스크롤 위치 저장

@@ -26,6 +26,7 @@ import type {
 
 import type {
   CommentEmotionAnalysis,
+  CommentsSummary,
   CrawlerEpisodeCommentList200,
   CrawlerEpisodeCommentListParams,
   CrawlerSeriesEpisodeList200,
@@ -902,7 +903,92 @@ const {mutation: mutationOptions} = options ?
     }
     
 /**
- * Create a summary of comment emotion analysis results.
+ * 댓글 요약 조회
+ */
+export const llmApiSummaryAnalysisRead = (
+    episodeId: string,
+ signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<CommentsSummary[]>(
+      {url: `/llm/api/summary-analysis/${episodeId}/`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+export const getLlmApiSummaryAnalysisReadQueryKey = (episodeId: string,) => {
+    return [`/llm/api/summary-analysis/${episodeId}/`] as const;
+    }
+
+    
+export const getLlmApiSummaryAnalysisReadQueryOptions = <TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLlmApiSummaryAnalysisReadQueryKey(episodeId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>> = ({ signal }) => llmApiSummaryAnalysisRead(episodeId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(episodeId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type LlmApiSummaryAnalysisReadQueryResult = NonNullable<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>>
+export type LlmApiSummaryAnalysisReadQueryError = void
+
+
+export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(
+ episodeId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>,
+          TError,
+          Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(
+ episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>,
+          TError,
+          Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(
+ episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(
+ episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getLlmApiSummaryAnalysisReadQueryOptions(episodeId,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * 댓글 요약 생성
  */
 export const llmApiSummaryAnalysisCreate = (
     episodeId: string,
@@ -910,7 +996,7 @@ export const llmApiSummaryAnalysisCreate = (
 ) => {
       
       
-      return axiosInstance<void>(
+      return axiosInstance<CommentsSummary[]>(
       {url: `/llm/api/summary-analysis/${episodeId}/`, method: 'POST', signal
     },
       );
@@ -918,7 +1004,7 @@ export const llmApiSummaryAnalysisCreate = (
   
 
 
-export const getLlmApiSummaryAnalysisCreateMutationOptions = <TError = unknown,
+export const getLlmApiSummaryAnalysisCreateMutationOptions = <TError = void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext>, }
 ): UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext> => {
 
@@ -945,9 +1031,9 @@ const {mutation: mutationOptions} = options ?
 
     export type LlmApiSummaryAnalysisCreateMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>>
     
-    export type LlmApiSummaryAnalysisCreateMutationError = unknown
+    export type LlmApiSummaryAnalysisCreateMutationError = void
 
-    export const useLlmApiSummaryAnalysisCreate = <TError = unknown,
+    export const useLlmApiSummaryAnalysisCreate = <TError = void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
@@ -957,6 +1043,65 @@ const {mutation: mutationOptions} = options ?
       > => {
 
       const mutationOptions = getLlmApiSummaryAnalysisCreateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * 댓글 요약 삭제
+ */
+export const llmApiSummaryAnalysisDelete = (
+    episodeId: string,
+ ) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/llm/api/summary-analysis/${episodeId}/`, method: 'DELETE'
+    },
+      );
+    }
+  
+
+
+export const getLlmApiSummaryAnalysisDeleteMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>, TError,{episodeId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>, TError,{episodeId: string}, TContext> => {
+
+const mutationKey = ['llmApiSummaryAnalysisDelete'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>, {episodeId: string}> = (props) => {
+          const {episodeId} = props ?? {};
+
+          return  llmApiSummaryAnalysisDelete(episodeId,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LlmApiSummaryAnalysisDeleteMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>>
+    
+    export type LlmApiSummaryAnalysisDeleteMutationError = void
+
+    export const useLlmApiSummaryAnalysisDelete = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>, TError,{episodeId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>,
+        TError,
+        {episodeId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getLlmApiSummaryAnalysisDeleteMutationOptions(options);
 
       return useMutation(mutationOptions , queryClient);
     }
