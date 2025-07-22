@@ -1,5 +1,5 @@
 import {
-  //reqact-query hooks
+  //react-query hooks
   useCrawlerEpisodeCommentList as useEpisodeCommentList,
   useCrawlerEpisodeRead as useEpisode,
   useCrawlerSeriesCrawlCreate as useCrawlSeries,
@@ -8,6 +8,7 @@ import {
   useCrawlerSeriesList as useSeriesList,
   useCrawlerSeriesRead as useSeries,
   useCrawlerEpisodeCommentCrawlCreate as useCrawlComment,
+  useLlmApiEmotionAnalysisPartialUpdate as useEmotionAnalysisPartialUpdate,
   //api functions
   crawlerEpisodeCommentList as getCommentList,
   crawlerSeriesEpisodeList as getEpisodeList,
@@ -23,6 +24,7 @@ export {
   useSeriesList,
   useSeries,
   useCrawlComment,
+  useEmotionAnalysisPartialUpdate,
   //api functions
   getCommentList,
   getEpisodeList,

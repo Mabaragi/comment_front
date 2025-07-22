@@ -1,69 +1,62 @@
-import SeriesDetail from './SeriesDetail';
 import { useParams } from 'react-router-dom';
-import { useEpisodeInfiniteList } from '../../hooks/useEpisode';
-// import { useCrawlerSeriesRead } from '@/api/generated';
-import { useSeries } from '@/hooks/useCrawler';
-import { useRef, useEffect } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useNavigate } from 'react-router-dom';
-import { useInfiniteScroll } from '@/hooks/hooks';
+import { useEffect } from 'react';
 
-function EmptyState({ message }: { message: string }) {
-  return (
-    <div className="container mx-auto px-4 py-8 text-center text-gray-500">
-      <p>{message}</p>
-    </div>
-  );
-}
+import { useSeriesData } from '@/hooks/useSeriesData';
+import { useInfiniteScroll } from '@/hooks/hooks';
+import {
+  EmptyState,
+  SeriesDetailSkeleton,
+  ErrorState,
+} from '@/components/SeriesStates';
+import SeriesDetail from './SeriesDetail';
 
 export default function SeriesDetailContainer() {
   const { seriesId: seriesIdString } = useParams() as { seriesId: string };
 
+  // 커스텀 훅으로 로직 분리
   const {
-    data: series,
-    isLoading: isSeriesLoading,
-    isError: isSeriesError,
-    error: seriesError,
-  } = useSeries(seriesIdString);
-  const {
-    data: episodeQueryResponse,
+    series,
+    isSeriesLoading,
+    isSeriesError,
+    seriesError,
+    episodes,
     fetchNextPage,
     hasNextPage,
-    isLoading: isEpisodeLoading,
-    isError: isEpisodeError,
-  } = useEpisodeInfiniteList(seriesIdString);
+    isEpisodeLoading,
+    hasError,
+    navigate,
+  } = useSeriesData(seriesIdString);
 
+  // 무한 스크롤 관리
   const loadMoreRef = useInfiniteScroll({
     fetchNextPage,
     hasNextPage,
     isLoading: isEpisodeLoading,
   });
 
-  const episodes =
-    episodeQueryResponse?.pages.flatMap((page) => page.results) || [];
-
-  const navigate = useNavigate();
-
+  // 404 에러 처리
   useEffect(() => {
     if (isSeriesError && seriesError && (seriesError as any).status === 404) {
       navigate('/notfound', { replace: true });
     }
   }, [isSeriesError, seriesError, navigate]);
 
+  // 로딩 상태
   if (isSeriesLoading) {
     return <SeriesDetailSkeleton />;
   }
 
-  if (isSeriesError || isEpisodeError) {
+  // 에러 상태
+  if (hasError) {
     return <ErrorState onRetry={() => window.location.reload()} />;
   }
 
+  // 빈 상태
   if (!series) {
     return <EmptyState message="시리즈를 찾을 수 없습니다." />;
   }
 
+  // 정상 렌더링
   return (
     <SeriesDetail
       series={series}
@@ -71,43 +64,5 @@ export default function SeriesDetailContainer() {
       observerRef={loadMoreRef}
       isEpisodeLoading={isEpisodeLoading}
     />
-  );
-}
-
-function SeriesDetailSkeleton() {
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-center gap-8 mb-8">
-        <Skeleton className="w-40 h-40 rounded-lg" />
-        <div className="flex-grow">
-          <Skeleton className="h-8 w-3/4 mb-4" />
-          <Skeleton className="h-6 w-1/2" />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="border rounded-lg p-4">
-            <Skeleton className="w-full h-32 mb-4" />
-            <Skeleton className="h-6 w-3/4" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ErrorState({ onRetry }: { onRetry: () => void }) {
-  return (
-    <div className="container mx-auto px-4 py-8 text-center">
-      <Alert variant="destructive" className="max-w-md mx-auto">
-        <AlertTitle>Error</AlertTitle>
-        <AlertDescription>
-          데이터를 불러오는 중 오류가 발생했습니다.
-        </AlertDescription>
-      </Alert>
-      <Button onClick={onRetry} className="mt-4">
-        다시 시도
-      </Button>
-    </div>
   );
 }

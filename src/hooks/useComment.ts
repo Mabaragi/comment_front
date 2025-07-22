@@ -3,7 +3,6 @@ import type { CommentListResponse } from '@/types/comments';
 import type { CommentListParams } from '@/types/comments';
 import { getCommentList } from './useCrawler';
 import { apiNextInfinteQuery } from '@/api/custom';
-import { useCrawlComment } from '@/hooks/useCrawler';
 
 export function useCommentInfiniteList(
   productId: string,
