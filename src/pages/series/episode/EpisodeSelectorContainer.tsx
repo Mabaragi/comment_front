@@ -1,5 +1,4 @@
 import EpisodeSelector from '../../../components/EpisodeSelector';
-// import { useCrawlerSeriesEpisodeList } from '@/api/generated';
 import { useSeriesEpisodeList } from '@/hooks/useCrawler';
 
 type Props = {
@@ -8,7 +7,7 @@ type Props = {
 
 export default function EpisodeSelectorContainer({ seriesId }: Props) {
   const { data } = useSeriesEpisodeList(seriesId.toString(), {
-    page: 9999,
+    page_size: 9999,
   });
   const episodeNums =
     data?.results.map((episode) => ({ id: episode.id, name: episode.name })) ||

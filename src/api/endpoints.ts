@@ -25,7 +25,6 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  CommentEmotionAnalysis,
   CommentsSummary,
   CrawlerEpisodeCommentList200,
   CrawlerEpisodeCommentListParams,
@@ -699,151 +698,6 @@ const {mutation: mutationOptions} = options ?
     }
     
 /**
- * 댓글 감정 분석 결과 조회
- */
-export const llmApiEmotionAnalysisRead = (
-    commentId: string,
- signal?: AbortSignal
-) => {
-      
-      
-      return axiosInstance<CommentEmotionAnalysis>(
-      {url: `/llm/api/emotion-analysis/${commentId}/`, method: 'GET', signal
-    },
-      );
-    }
-  
-
-export const getLlmApiEmotionAnalysisReadQueryKey = (commentId: string,) => {
-    return [`/llm/api/emotion-analysis/${commentId}/`] as const;
-    }
-
-    
-export const getLlmApiEmotionAnalysisReadQueryOptions = <TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
-) => {
-
-const {query: queryOptions} = options ?? {};
-
-  const queryKey =  queryOptions?.queryKey ?? getLlmApiEmotionAnalysisReadQueryKey(commentId);
-
-  
-
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>> = ({ signal }) => llmApiEmotionAnalysisRead(commentId, signal);
-
-      
-
-      
-
-   return  { queryKey, queryFn, enabled: !!(commentId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type LlmApiEmotionAnalysisReadQueryResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>>
-export type LlmApiEmotionAnalysisReadQueryError = void
-
-
-export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
- commentId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>> & Pick<
-        DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-          TError,
-          Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
- commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>> & Pick<
-        UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>,
-          TError,
-          Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>
-        > , 'initialData'
-      >, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
- commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-
-export function useLlmApiEmotionAnalysisRead<TData = Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError = void>(
- commentId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisRead>>, TError, TData>>, }
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
-
-  const queryOptions = getLlmApiEmotionAnalysisReadQueryOptions(commentId,options)
-
-  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
-
-  return query;
-}
-
-
-
-
-/**
- * 댓글 감정 분석 요청
- */
-export const llmApiEmotionAnalysisCreate = (
-    commentId: string,
- signal?: AbortSignal
-) => {
-      
-      
-      return axiosInstance<CommentEmotionAnalysis>(
-      {url: `/llm/api/emotion-analysis/${commentId}/`, method: 'POST', signal
-    },
-      );
-    }
-  
-
-
-export const getLlmApiEmotionAnalysisCreateMutationOptions = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext>, }
-): UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext> => {
-
-const mutationKey = ['llmApiEmotionAnalysisCreate'];
-const {mutation: mutationOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, {commentId: string}> = (props) => {
-          const {commentId} = props ?? {};
-
-          return  llmApiEmotionAnalysisCreate(commentId,)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type LlmApiEmotionAnalysisCreateMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>>
-    
-    export type LlmApiEmotionAnalysisCreateMutationError = void
-
-    export const useLlmApiEmotionAnalysisCreate = <TError = void,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>, TError,{commentId: string}, TContext>, }
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof llmApiEmotionAnalysisCreate>>,
-        TError,
-        {commentId: string},
-        TContext
-      > => {
-
-      const mutationOptions = getLlmApiEmotionAnalysisCreateMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    
-/**
  * 댓글 감정 분석 결과 삭제
  */
 export const llmApiEmotionAnalysisDeleteDelete = (
@@ -903,7 +757,71 @@ const {mutation: mutationOptions} = options ?
     }
     
 /**
- * 댓글 요약 조회
+ * 댓글 감정 분석 실행
+ * @summary 에피소드의 미처리 댓글들에 대해 감정 분석을 수행합니다.
+ */
+export const llmApiEmotionAnalysisPartialUpdate = (
+    episodeId: string,
+ ) => {
+      
+      
+      return axiosInstance<void>(
+      {url: `/llm/api/emotion-analysis/${episodeId}/`, method: 'PATCH'
+    },
+      );
+    }
+  
+
+
+export const getLlmApiEmotionAnalysisPartialUpdateMutationOptions = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>, TError,{episodeId: string}, TContext>, }
+): UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>, TError,{episodeId: string}, TContext> => {
+
+const mutationKey = ['llmApiEmotionAnalysisPartialUpdate'];
+const {mutation: mutationOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }};
+
+      
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>, {episodeId: string}> = (props) => {
+          const {episodeId} = props ?? {};
+
+          return  llmApiEmotionAnalysisPartialUpdate(episodeId,)
+        }
+
+        
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type LlmApiEmotionAnalysisPartialUpdateMutationResult = NonNullable<Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>>
+    
+    export type LlmApiEmotionAnalysisPartialUpdateMutationError = void
+
+    /**
+ * @summary 에피소드의 미처리 댓글들에 대해 감정 분석을 수행합니다.
+ */
+export const useLlmApiEmotionAnalysisPartialUpdate = <TError = void,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>, TError,{episodeId: string}, TContext>, }
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof llmApiEmotionAnalysisPartialUpdate>>,
+        TError,
+        {episodeId: string},
+        TContext
+      > => {
+
+      const mutationOptions = getLlmApiEmotionAnalysisPartialUpdateMutationOptions(options);
+
+      return useMutation(mutationOptions , queryClient);
+    }
+    
+/**
+ * 댓글 요약 목록 조회
+ * @summary 특정 에피소드의 모든 댓글 요약 결과를 조회합니다.
  */
 export const llmApiSummaryAnalysisRead = (
     episodeId: string,
@@ -969,6 +887,9 @@ export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof l
  episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>>, }
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+/**
+ * @summary 특정 에피소드의 모든 댓글 요약 결과를 조회합니다.
+ */
 
 export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError = void>(
  episodeId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisRead>>, TError, TData>>, }
@@ -989,6 +910,7 @@ export function useLlmApiSummaryAnalysisRead<TData = Awaited<ReturnType<typeof l
 
 /**
  * 댓글 요약 생성
+ * @summary 에피소드의 댓글들을 요약하여 새로운 요약 결과를 생성합니다.
  */
 export const llmApiSummaryAnalysisCreate = (
     episodeId: string,
@@ -996,7 +918,7 @@ export const llmApiSummaryAnalysisCreate = (
 ) => {
       
       
-      return axiosInstance<CommentsSummary[]>(
+      return axiosInstance<CommentsSummary>(
       {url: `/llm/api/summary-analysis/${episodeId}/`, method: 'POST', signal
     },
       );
@@ -1033,7 +955,10 @@ const {mutation: mutationOptions} = options ?
     
     export type LlmApiSummaryAnalysisCreateMutationError = void
 
-    export const useLlmApiSummaryAnalysisCreate = <TError = void,
+    /**
+ * @summary 에피소드의 댓글들을 요약하여 새로운 요약 결과를 생성합니다.
+ */
+export const useLlmApiSummaryAnalysisCreate = <TError = void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>, TError,{episodeId: string}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof llmApiSummaryAnalysisCreate>>,
@@ -1048,7 +973,8 @@ const {mutation: mutationOptions} = options ?
     }
     
 /**
- * 댓글 요약 삭제
+ * 댓글 요약 전체 삭제
+ * @summary 특정 에피소드의 모든 댓글 요약 결과를 삭제합니다.
  */
 export const llmApiSummaryAnalysisDelete = (
     episodeId: string,
@@ -1092,7 +1018,10 @@ const {mutation: mutationOptions} = options ?
     
     export type LlmApiSummaryAnalysisDeleteMutationError = void
 
-    export const useLlmApiSummaryAnalysisDelete = <TError = void,
+    /**
+ * @summary 특정 에피소드의 모든 댓글 요약 결과를 삭제합니다.
+ */
+export const useLlmApiSummaryAnalysisDelete = <TError = void,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>, TError,{episodeId: string}, TContext>, }
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof llmApiSummaryAnalysisDelete>>,

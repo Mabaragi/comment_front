@@ -31,16 +31,12 @@ export default function SeriesDetail({
           <h1 className="text-2xl sm:text-3xl font-bold mb-2 whitespace-normal break-words">
             {series.title}
           </h1>
-          {/* 추가적인 시리즈 정보 (작가, 장르 등)가 있다면 여기에 표시 */}
         </div>
       </div>
-      <EpisodeSelectorContainer seriesId={series.id} />
-      <h2 className="text-2xl font-semibold mb-4 mt-6">에피소드 목록</h2>
-      {/* Refactored Episode Grid:
-          - The complex JavaScript rounding logic has been removed.
-          - We apply rounding and overflow-hidden to the container for a clean look.
-          - Each card gets borders on the bottom and right to create a grid line effect.
-        */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-semibold mb-4 mt-6">에피소드 목록</h2>
+        <EpisodeSelectorContainer seriesId={series.id} />
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-0 border-t border-l rounded-lg overflow-hidden">
         {episodes.map((ep) => {
           return <EpisodeCard key={ep.id} episode={ep} seriesId={series.id} />;

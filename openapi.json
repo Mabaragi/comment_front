@@ -441,68 +441,6 @@
         }
       ]
     },
-    "/llm/api/emotion-analysis/{comment_id}/": {
-      "get": {
-        "operationId": "llm_api_emotion-analysis_read",
-        "description": "댓글 감정 분석 결과 조회",
-        "parameters": [
-          {
-            "name": "comment_id",
-            "in": "path",
-            "description": "조회할 댓글의 ID",
-            "required": true,
-            "type": "integer",
-            "default": 165999266
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/CommentEmotionAnalysis"
-            }
-          },
-          "404": {
-            "description": "Not Found"
-          }
-        },
-        "tags": ["llm"]
-      },
-      "post": {
-        "operationId": "llm_api_emotion-analysis_create",
-        "description": "댓글 감정 분석 요청",
-        "parameters": [
-          {
-            "name": "comment_id",
-            "in": "path",
-            "description": "분석할 댓글의 ID",
-            "required": true,
-            "type": "integer",
-            "default": 165999266
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "",
-            "schema": {
-              "$ref": "#/definitions/CommentEmotionAnalysis"
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        },
-        "tags": ["llm"]
-      },
-      "parameters": [
-        {
-          "name": "comment_id",
-          "in": "path",
-          "required": true,
-          "type": "string"
-        }
-      ]
-    },
     "/llm/api/emotion-analysis/{comment_id}/delete/": {
       "delete": {
         "operationId": "llm_api_emotion-analysis_delete_delete",
@@ -536,15 +474,53 @@
         }
       ]
     },
-    "/llm/api/summary-analysis/{episode_id}/": {
-      "get": {
-        "operationId": "llm_api_summary-analysis_read",
-        "description": "댓글 요약 조회",
+    "/llm/api/emotion-analysis/{episode_id}/": {
+      "patch": {
+        "operationId": "llm_api_emotion-analysis_partial_update",
+        "summary": "에피소드의 미처리 댓글들에 대해 감정 분석을 수행합니다.",
+        "description": "댓글 감정 분석 실행",
         "parameters": [
           {
             "name": "episode_id",
             "in": "path",
-            "description": "에피소드의 ID",
+            "description": "분석할 댓글들이 속한 에피소드의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61823562"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "분석 성공"
+          },
+          "404": {
+            "description": "Not Found - 에피소드를 찾을 수 없음"
+          },
+          "500": {
+            "description": "Internal Server Error - 분석 처리 오류"
+          }
+        },
+        "tags": ["llm"]
+      },
+      "parameters": [
+        {
+          "name": "episode_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/llm/api/summary-analysis/{episode_id}/": {
+      "get": {
+        "operationId": "llm_api_summary-analysis_read",
+        "summary": "특정 에피소드의 모든 댓글 요약 결과를 조회합니다.",
+        "description": "댓글 요약 목록 조회",
+        "parameters": [
+          {
+            "name": "episode_id",
+            "in": "path",
+            "description": "조회할 에피소드의 ID",
             "required": true,
             "type": "integer",
             "default": "61823562"
@@ -561,48 +537,50 @@
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found - 에피소드를 찾을 수 없음"
           }
         },
         "tags": ["llm"]
       },
       "post": {
         "operationId": "llm_api_summary-analysis_create",
+        "summary": "에피소드의 댓글들을 요약하여 새로운 요약 결과를 생성합니다.",
         "description": "댓글 요약 생성",
         "parameters": [
           {
             "name": "episode_id",
             "in": "path",
-            "description": "에피소드의 ID",
+            "description": "요약할 댓글들이 속한 에피소드의 ID",
             "required": true,
             "type": "integer",
             "default": "61823562"
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/CommentsSummary"
-              }
+              "$ref": "#/definitions/CommentsSummary"
             }
           },
+          "400": {
+            "description": "Bad Request - 잘못된 요청 데이터"
+          },
           "404": {
-            "description": "Not Found"
+            "description": "Not Found - 에피소드를 찾을 수 없음"
           }
         },
         "tags": ["llm"]
       },
       "delete": {
         "operationId": "llm_api_summary-analysis_delete",
-        "description": "댓글 요약 삭제",
+        "summary": "특정 에피소드의 모든 댓글 요약 결과를 삭제합니다.",
+        "description": "댓글 요약 전체 삭제",
         "parameters": [
           {
             "name": "episode_id",
             "in": "path",
-            "description": "에피소드의 ID",
+            "description": "삭제할 요약들이 속한 에피소드의 ID",
             "required": true,
             "type": "integer",
             "default": "61823562"
@@ -610,10 +588,10 @@
         ],
         "responses": {
           "204": {
-            "description": "삭제 성공 (No Content)"
+            "description": "No Content - 삭제 성공"
           },
           "404": {
-            "description": "No summaries found for this episode."
+            "description": "Not Found - 삭제할 요약이 없음"
           }
         },
         "tags": ["llm"]
@@ -825,6 +803,13 @@
           "type": "string",
           "x-nullable": true
         },
+        "ai_emotion_score": {
+          "title": "Ai emotion score",
+          "type": "integer",
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "x-nullable": true
+        },
         "is_ai_processed": {
           "title": "Is ai processed",
           "type": "boolean"
@@ -900,39 +885,6 @@
       "properties": {
         "id": {
           "title": "Id",
-          "type": "integer"
-        }
-      }
-    },
-    "CommentEmotionAnalysis": {
-      "required": ["comment"],
-      "type": "object",
-      "properties": {
-        "id": {
-          "title": "ID",
-          "type": "integer",
-          "readOnly": true
-        },
-        "content": {
-          "title": "Content",
-          "type": "string",
-          "readOnly": true,
-          "minLength": 1
-        },
-        "sentiment": {
-          "title": "Sentiment",
-          "type": "string",
-          "readOnly": true,
-          "minLength": 1
-        },
-        "created_at": {
-          "title": "Created at",
-          "type": "string",
-          "format": "date-time",
-          "readOnly": true
-        },
-        "comment": {
-          "title": "Comment",
           "type": "integer"
         }
       }

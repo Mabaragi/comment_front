@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Button } from '@/components/ui/button';
 
 type SortOption = 'latest' | 'oldest' | 'popularity';
 
@@ -102,6 +103,7 @@ export default function CommentListContainer() {
     <div className="flex flex-col flex-1">
       <div className="flex items-center justify-between mx-2 flex-shrink-0">
         <div>댓글 개수: {commentCount}</div>
+        <Button variant="outline">감정 분석 요청</Button>
         <Select
           value={sort}
           onValueChange={(value) =>
@@ -126,7 +128,7 @@ export default function CommentListContainer() {
             if (hasNextPage && !isEpisodeLoading) fetchNextPage();
           }}
           listClassName="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 items-stretch gap-1 bg-zinc-100"
-          itemContent={(index) => <CommentListItem comment={comments[index]} />}
+          itemContent={(index) => <CommentListItem comment={comments[index]} />}          
           initialTopMostItemIndex={initialTopMostItemIndex}
           rangeChanged={({ startIndex }) => {
             console.log('rangeChanged', startIndex);

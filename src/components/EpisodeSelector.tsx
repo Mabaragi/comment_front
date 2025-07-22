@@ -20,7 +20,7 @@ export default function EpisodeSelector({ seriesId, episodeNums }: Props) {
   return (
     <Select onValueChange={handleSelectChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder="Theme" />
+        <SelectValue placeholder="에피소드 선택" />
       </SelectTrigger>
       <SelectContent>
         {episodeNums.map((episode) => (
@@ -32,9 +32,6 @@ export default function EpisodeSelector({ seriesId, episodeNums }: Props) {
             {episode.name}
           </SelectItem>
         ))}
-        <SelectItem value="light">Light</SelectItem>
-        <SelectItem value="dark">Dark</SelectItem>
-        <SelectItem value="system">System</SelectItem>
       </SelectContent>
     </Select>
   );

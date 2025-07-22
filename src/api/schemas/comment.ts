@@ -43,6 +43,12 @@ export interface Comment {
   ai_category?: string | null;
   /** @nullable */
   ai_reason?: string | null;
+  /**
+   * @minimum -2147483648
+   * @maximum 2147483647
+   * @nullable
+   */
+  ai_emotion_score?: number | null;
   is_ai_processed?: boolean;
   /** @nullable */
   ai_processed_at?: string | null;
