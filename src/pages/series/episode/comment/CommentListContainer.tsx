@@ -31,6 +31,7 @@ export default function CommentListContainer() {
   return (
     <div className="flex flex-col flex-1">
       <CommentHeader
+        comments={comments} // 첫 번째 댓글을 헤더에 전달
         commentCount={commentCount}
         sort={sort}
         onSortChange={setSort}

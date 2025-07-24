@@ -8,8 +8,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { SORT_OPTIONS, type SortOption } from '@/hooks/useCommentData';
+import type { Comment } from '@/types/comments';
 
 interface CommentHeaderProps {
+  comments: Comment[];
   commentCount: number;
   sort: SortOption;
   onSortChange: (value: SortOption) => void;
@@ -18,12 +20,15 @@ interface CommentHeaderProps {
 }
 
 export default function CommentHeader({
+  comments,
   commentCount,
   sort,
   onSortChange,
   onEmotionAnalysisRequest,
   isAnalyzing,
 }: CommentHeaderProps) {
+  const allProcessed =
+    comments.length > 0 && comments.every((c) => c.is_ai_processed);
   return (
     <div className="flex items-center justify-between mx-2 flex-shrink-0">
       <div>댓글 개수: {commentCount}</div>
@@ -31,7 +36,7 @@ export default function CommentHeader({
       <Button
         variant="outline"
         onClick={onEmotionAnalysisRequest}
-        disabled={isAnalyzing}
+        disabled={isAnalyzing || allProcessed}
         className="cursor-pointer"
       >
         {isAnalyzing ? (
@@ -39,6 +44,8 @@ export default function CommentHeader({
             <Loader2Icon className="animate-spin mr-2 h-4 w-4" />
             분석 중...
           </>
+        ) : allProcessed ? (
+          '분석 완료'
         ) : (
           '감정 분석 요청'
         )}

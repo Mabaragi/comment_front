@@ -1,4 +1,4 @@
-import { useSeriesList } from '@/hooks/useCrawler';
+import { useSeriesList, useCrawlSeries } from '@/hooks/useCrawler';
 import SeriesList from './SeriesList';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
@@ -35,7 +35,15 @@ export default function SeriesListContainer() {
     isLoading,
     isError,
     error,
+    refetch: refetchSeriesList,
   } = useSeriesList({ page_size: 100 });
+
+  const mutateCrawlSeries = useCrawlSeries({
+    mutation: {
+      onSuccess: () => refetchSeriesList(),
+      onError: (err) => console.error('Crawl series failed:', err),
+    },
+  });
 
   const series = seriesQueryResponse?.results;
 
@@ -45,5 +53,7 @@ export default function SeriesListContainer() {
   if (isError) {
     return <ErrorState message={(error as Error).message} />;
   }
-  return <SeriesList series={series ?? []} />;
+  return (
+    <SeriesList series={series ?? []} mutateCrawlSeries={mutateCrawlSeries} />
+  );
 }
