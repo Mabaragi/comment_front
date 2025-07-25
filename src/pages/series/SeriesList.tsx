@@ -18,7 +18,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { useCrawlSeries } from '@/hooks/useCrawler';
+import { useCrawlEpisodeList, useCrawlSeries } from '@/hooks/useCrawler';
 import { Loader2Icon } from 'lucide-react';
 
 type Props = {
@@ -85,17 +85,21 @@ function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
     resolver: zodResolver(formSchema),
   });
 
-  const onSubmit = (data: FormData) => {
+  const mutateCrawlEpisodeList = useCrawlEpisodeList();
+
+  const onSubmit = async (data: FormData) => {
     const id = Number(data.seriesId);
-    mutateCrawlSeries.mutate(
-      { data: { id } },
-      {
-        onSuccess: () => {
-          setOpen(false);
-          reset();
-        },
-      },
-    );
+    try {
+      await mutateCrawlSeries.mutateAsync({ data: { id } });
+      setOpen(false);
+      reset();
+      const seriesIdString = String(id);
+      mutateCrawlEpisodeList.mutate({ seriesId: seriesIdString });
+      // 성공 메시지 등 추가 가능
+    } catch (error) {
+      // 에러 핸들링
+      console.error('요청 실패:', error);
+    }
   };
 
   const isMutating = mutateCrawlSeries.isPending;

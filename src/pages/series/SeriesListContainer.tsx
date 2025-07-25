@@ -41,7 +41,9 @@ export default function SeriesListContainer() {
 
   const mutateCrawlSeries = useCrawlSeries<ErrorResponse>({
     mutation: {
-      onSuccess: () => refetchSeriesList(),
+      onSuccess: () => {
+        refetchSeriesList();
+      },
       onError: (err) => console.error('Crawl series failed:', err),
     },
   });
