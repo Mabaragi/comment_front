@@ -22,6 +22,7 @@ export * from './customUser';
 export * from './episode';
 export * from './episodeCreateResponse';
 export * from './episodeCreateResponseErrorsItemsItem';
+export * from './errorResponse';
 export * from './series';
 export * from './seriesCreate';
 export * from './tokenObtainPair';

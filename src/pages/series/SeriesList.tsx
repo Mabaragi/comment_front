@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Series } from '../../types/series';
+import type { ErrorResponse } from '@/api/schemas';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Dialog,
@@ -15,50 +16,47 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 import { useCrawlSeries } from '@/hooks/useCrawler';
 import { Loader2Icon } from 'lucide-react';
-import Apollo from './Apollo';
 
 type Props = {
   series: Series[];
-  mutateCrawlSeries: ReturnType<typeof useCrawlSeries>;
+  mutateCrawlSeries: ReturnType<typeof useCrawlSeries<ErrorResponse>>;
 };
 
 type AddSeriesDialogProps = {
-  mutateCrawlSeries: ReturnType<typeof useCrawlSeries>;
+  mutateCrawlSeries: ReturnType<typeof useCrawlSeries<ErrorResponse>>;
 };
 
 export default function SeriesList({ series, mutateCrawlSeries }: Props) {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex items-start gap-6">
-        <div className="flex-1">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {series.map((item: Series) => (
-              <Link to={`/main/series/${item.id}`} key={item.id}>
-                <Card className="overflow-hidden transition-transform transform hover:-translate-y-1 hover:shadow-lg h-full flex flex-col">
-                  <CardHeader className="p-0">
-                    <img
-                      src={item.image_src}
-                      alt={item.title}
-                      className="w-full h-48 object-cover"
-                    />
-                  </CardHeader>
-                  <CardContent className="p-4 flex-grow">
-                    <CardTitle className="text-lg font-bold">
-                      {item.title}
-                    </CardTitle>
-                  </CardContent>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="min-w-[180px]">
-          <AddSeriesDialog mutateCrawlSeries={mutateCrawlSeries} />
-        </div>
+    <div className="container mx-auto px-4">
+      <div className="min-w-full flex justify-end mb-4">
+        <AddSeriesDialog mutateCrawlSeries={mutateCrawlSeries} />
       </div>
-      <Apollo />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {series.map((item: Series) => (
+          <Card className="" key={item.id}>
+            <Link to={`/main/series/${item.id}`}>
+              <CardHeader className="p-0 w-full">
+                <img
+                  src={item.image_src}
+                  alt={item.title}
+                  className="w-full h-full object-cover"
+                />
+              </CardHeader>
+            </Link>
+            <CardContent className="p-1 flex-grow">
+              <CardTitle className="text-lg text-center font-bold">
+                {item.title}
+              </CardTitle>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+      {/* <Apollo /> */}
     </div>
   );
 }
@@ -66,34 +64,62 @@ export default function SeriesList({ series, mutateCrawlSeries }: Props) {
 function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
   const [open, setOpen] = useState(false);
 
-  type FormData = {
-    seriesId: string;
-  };
+  const formSchema = z.object({
+    seriesId: z
+      .string()
+      .min(1, '시리즈 ID를 입력하세요')
+      .refine((val) => {
+        const num = Number(val);
+        return !isNaN(num) && num > 0;
+      }, '올바른 시리즈 ID를 입력하세요'),
+  });
+
+  type FormData = z.infer<typeof formSchema>;
 
   const {
     register,
     handleSubmit,
     reset,
-    setError,
-    formState: { errors },
-  } = useForm<FormData>();
+    formState: { errors: formErrors },
+  } = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+  });
 
   const onSubmit = (data: FormData) => {
     const id = Number(data.seriesId);
-    if (!isNaN(id) && id > 0) {
-      mutateCrawlSeries.mutate({ data: { id } });
-      console.log(`Crawling series with ID: ${id}`);
-      setOpen(false);
-      reset();
-    } else {
-      setError('seriesId', {
-        type: 'manual',
-        message: '올바른 시리즈 ID를 입력하세요.',
-      });
-    }
+    mutateCrawlSeries.mutate(
+      { data: { id } },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          reset();
+        },
+      },
+    );
   };
+
   const isMutating = mutateCrawlSeries.isPending;
-  const hasError = mutateCrawlSeries.isError;
+  const mutationError = mutateCrawlSeries.isError;
+
+  // 에러 메시지 결정 로직
+  const getErrorMessage = () => {
+    if (formErrors.seriesId) {
+      return formErrors.seriesId.message;
+    }
+
+    if (mutationError) {
+      const error = mutateCrawlSeries.error as ErrorResponse;
+      // 404 에러 체크는 error_code로 판단
+      if (error?.error_code === 'NOT_FOUND') {
+        return '해당 시리즈가 존재하지 않습니다.';
+      }
+      return '요청중에 오류가 발생했습니다.';
+    }
+    return null;
+  };
+
+  const errorMessage = getErrorMessage();
+  const hasError = !!errorMessage;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -125,15 +151,11 @@ function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
             <div className="grid gap-3">
               <Input
                 id="seriesId-1"
-                {...register('seriesId', {
-                  required: '시리즈 ID를 입력하세요',
-                })}
+                {...register('seriesId')}
                 placeholder="시리즈 ID 입력"
               />
-              {errors.seriesId && (
-                <p className="text-sm text-red-500">
-                  {errors.seriesId.message}
-                </p>
+              {hasError && (
+                <p className="text-sm text-red-500">{errorMessage}</p>
               )}
             </div>
           </div>

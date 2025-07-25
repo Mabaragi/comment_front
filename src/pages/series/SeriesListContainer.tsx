@@ -2,6 +2,7 @@ import { useSeriesList, useCrawlSeries } from '@/hooks/useCrawler';
 import SeriesList from './SeriesList';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ErrorResponse } from '@/api/schemas/errorResponse';
 
 function SeriesListSkeleton() {
   return (
@@ -38,7 +39,7 @@ export default function SeriesListContainer() {
     refetch: refetchSeriesList,
   } = useSeriesList({ page_size: 100 });
 
-  const mutateCrawlSeries = useCrawlSeries({
+  const mutateCrawlSeries = useCrawlSeries<ErrorResponse>({
     mutation: {
       onSuccess: () => refetchSeriesList(),
       onError: (err) => console.error('Crawl series failed:', err),

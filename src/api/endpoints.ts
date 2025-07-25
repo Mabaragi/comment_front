@@ -33,6 +33,7 @@ import type {
   CustomUser,
   Episode,
   EpisodeCreateResponse,
+  ErrorResponse,
   Series,
   SeriesCreate,
   TokenObtainPair,
@@ -89,7 +90,7 @@ export const getCrawlerEpisodeReadQueryKey = (productId: string) => {
 
 export const getCrawlerEpisodeReadQueryOptions = <
   TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   productId: string,
   options?: {
@@ -126,11 +127,11 @@ export const getCrawlerEpisodeReadQueryOptions = <
 export type CrawlerEpisodeReadQueryResult = NonNullable<
   Awaited<ReturnType<typeof crawlerEpisodeRead>>
 >;
-export type CrawlerEpisodeReadQueryError = void;
+export type CrawlerEpisodeReadQueryError = ErrorResponse;
 
 export function useCrawlerEpisodeRead<
   TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   productId: string,
   options: {
@@ -156,7 +157,7 @@ export function useCrawlerEpisodeRead<
 };
 export function useCrawlerEpisodeRead<
   TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   productId: string,
   options?: {
@@ -182,7 +183,7 @@ export function useCrawlerEpisodeRead<
 };
 export function useCrawlerEpisodeRead<
   TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   productId: string,
   options?: {
@@ -201,7 +202,7 @@ export function useCrawlerEpisodeRead<
 
 export function useCrawlerEpisodeRead<
   TData = Awaited<ReturnType<typeof crawlerEpisodeRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   productId: string,
   options?: {
@@ -414,7 +415,7 @@ export const crawlerEpisodeCommentCrawlCreate = (
   productId: string,
   signal?: AbortSignal,
 ) => {
-  return axiosInstance<EpisodeCreateResponse>({
+  return axiosInstance<ErrorResponse | EpisodeCreateResponse>({
     url: `/crawler/episode/${productId}/comment/crawl`,
     method: 'POST',
     signal,
@@ -422,7 +423,7 @@ export const crawlerEpisodeCommentCrawlCreate = (
 };
 
 export const getCrawlerEpisodeCommentCrawlCreateMutationOptions = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -462,10 +463,10 @@ export type CrawlerEpisodeCommentCrawlCreateMutationResult = NonNullable<
   Awaited<ReturnType<typeof crawlerEpisodeCommentCrawlCreate>>
 >;
 
-export type CrawlerEpisodeCommentCrawlCreateMutationError = unknown;
+export type CrawlerEpisodeCommentCrawlCreateMutationError = ErrorResponse;
 
 export const useCrawlerEpisodeCommentCrawlCreate = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(
   options?: {
@@ -664,7 +665,7 @@ export const crawlerSeriesCrawlCreate = (
 };
 
 export const getCrawlerSeriesCrawlCreateMutationOptions = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -704,10 +705,10 @@ export type CrawlerSeriesCrawlCreateMutationResult = NonNullable<
   Awaited<ReturnType<typeof crawlerSeriesCrawlCreate>>
 >;
 export type CrawlerSeriesCrawlCreateMutationBody = SeriesCreate;
-export type CrawlerSeriesCrawlCreateMutationError = unknown;
+export type CrawlerSeriesCrawlCreateMutationError = ErrorResponse;
 
 export const useCrawlerSeriesCrawlCreate = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(
   options?: {
@@ -747,7 +748,7 @@ export const getCrawlerSeriesReadQueryKey = (seriesId: string) => {
 
 export const getCrawlerSeriesReadQueryOptions = <
   TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   seriesId: string,
   options?: {
@@ -784,11 +785,11 @@ export const getCrawlerSeriesReadQueryOptions = <
 export type CrawlerSeriesReadQueryResult = NonNullable<
   Awaited<ReturnType<typeof crawlerSeriesRead>>
 >;
-export type CrawlerSeriesReadQueryError = void;
+export type CrawlerSeriesReadQueryError = ErrorResponse;
 
 export function useCrawlerSeriesRead<
   TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   seriesId: string,
   options: {
@@ -814,7 +815,7 @@ export function useCrawlerSeriesRead<
 };
 export function useCrawlerSeriesRead<
   TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   seriesId: string,
   options?: {
@@ -840,7 +841,7 @@ export function useCrawlerSeriesRead<
 };
 export function useCrawlerSeriesRead<
   TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   seriesId: string,
   options?: {
@@ -859,7 +860,7 @@ export function useCrawlerSeriesRead<
 
 export function useCrawlerSeriesRead<
   TData = Awaited<ReturnType<typeof crawlerSeriesRead>>,
-  TError = void,
+  TError = ErrorResponse,
 >(
   seriesId: string,
   options?: {
@@ -1072,7 +1073,7 @@ export const crawlerSeriesEpisodeCrawlCreate = (
   seriesId: string,
   signal?: AbortSignal,
 ) => {
-  return axiosInstance<EpisodeCreateResponse>({
+  return axiosInstance<ErrorResponse | EpisodeCreateResponse>({
     url: `/crawler/series/${seriesId}/episode/crawl`,
     method: 'POST',
     signal,
@@ -1080,7 +1081,7 @@ export const crawlerSeriesEpisodeCrawlCreate = (
 };
 
 export const getCrawlerSeriesEpisodeCrawlCreateMutationOptions = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -1120,10 +1121,10 @@ export type CrawlerSeriesEpisodeCrawlCreateMutationResult = NonNullable<
   Awaited<ReturnType<typeof crawlerSeriesEpisodeCrawlCreate>>
 >;
 
-export type CrawlerSeriesEpisodeCrawlCreateMutationError = unknown;
+export type CrawlerSeriesEpisodeCrawlCreateMutationError = ErrorResponse;
 
 export const useCrawlerSeriesEpisodeCrawlCreate = <
-  TError = unknown,
+  TError = ErrorResponse,
   TContext = unknown,
 >(
   options?: {
