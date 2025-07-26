@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/authStore';
+import { getRefreshTokenFromCookie } from '@/utils/cookie';
 
 const baseURL = 'http://localhost:8000';
 
@@ -37,9 +38,10 @@ export const axiosInstance = async <T = any>(
 
     // accessToken 만료 시 refresh 시도
     if (axiosError.response?.status === 401 && !originalRequest._retry) {
+      console.log('Access token expired, attempting to refresh...');
       originalRequest._retry = true;
 
-      const refreshToken = useAuthStore.getState().refreshToken;
+      const refreshToken = getRefreshTokenFromCookie();
       if (refreshToken) {
         try {
           const refreshResponse = await axiosClient.post('/token/refresh/', {
@@ -47,7 +49,7 @@ export const axiosInstance = async <T = any>(
           });
 
           const newAccessToken = refreshResponse.data.access;
-          useAuthStore.getState().setTokens(newAccessToken, refreshToken);
+          useAuthStore.getState().setTokens(newAccessToken);
 
           // 재요청 시 Authorization 헤더 갱신
           originalRequest.headers = {

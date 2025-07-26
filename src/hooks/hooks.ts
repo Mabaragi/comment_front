@@ -1,3 +1,4 @@
+// 공통 유틸리티 훅들을 모아둔 파일
 import { useEffect, useRef } from 'react';
 
 interface UseInfiniteScrollProps {

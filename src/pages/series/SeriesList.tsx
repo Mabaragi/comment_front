@@ -17,9 +17,10 @@ import { Input } from '@/components/ui/input';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import { useCrawlEpisodeList, useCrawlSeries } from '@/hooks/useCrawler';
 import { Loader2Icon } from 'lucide-react';
+import { addSeriesSchema, type AddSeriesFormData } from '@/schemas';
+import ErrorMessage from '@/components/ErrorMessage';
 
 type Props = {
   series: Series[];
@@ -64,30 +65,18 @@ export default function SeriesList({ series, mutateCrawlSeries }: Props) {
 function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
   const [open, setOpen] = useState(false);
 
-  const formSchema = z.object({
-    seriesId: z
-      .string()
-      .min(1, '시리즈 ID를 입력하세요')
-      .refine((val) => {
-        const num = Number(val);
-        return !isNaN(num) && num > 0;
-      }, '올바른 시리즈 ID를 입력하세요'),
-  });
-
-  type FormData = z.infer<typeof formSchema>;
-
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors: formErrors },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<AddSeriesFormData>({
+    resolver: zodResolver(addSeriesSchema),
   });
 
   const mutateCrawlEpisodeList = useCrawlEpisodeList();
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async (data: AddSeriesFormData) => {
     const id = Number(data.seriesId);
     try {
       await mutateCrawlSeries.mutateAsync({ data: { id } });
@@ -158,9 +147,7 @@ function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
                 {...register('seriesId')}
                 placeholder="시리즈 ID 입력"
               />
-              {hasError && (
-                <p className="text-sm text-red-500">{errorMessage}</p>
-              )}
+              {hasError && <ErrorMessage errorMessage={errorMessage} />}
             </div>
           </div>
           <DialogFooter>
