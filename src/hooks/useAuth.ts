@@ -6,12 +6,14 @@ import { setRefreshTokenToCookie } from '@/utils/cookie';
 
 export const useLogin = () => {
   const setTokens = useAuthStore((state) => state.setTokens);
+  const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
 
   return useMutation({
     mutationFn: tokenCreate,
     onSuccess: (data) => {
       console.log('로그인 성공:', data);
       setTokens(data.access);
+      setIsLoggedIn(true);
       setRefreshTokenToCookie(data.refresh);
     },
     onError: (error) => {

@@ -64,7 +64,6 @@ export default function SeriesList({ series, mutateCrawlSeries }: Props) {
 
 function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
   const [open, setOpen] = useState(false);
-
   const {
     register,
     handleSubmit,
@@ -119,7 +118,6 @@ function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
       <DialogTrigger asChild>
         <Button
           className="text-white rounded-lg py-3 px-4 shadow hover:bg-primary/80 transition-colors"
-          onClick={() => setOpen(true)}
           disabled={isMutating}
         >
           {isMutating ? (
@@ -141,14 +139,12 @@ function AddSeriesDialog({ mutateCrawlSeries }: AddSeriesDialogProps) {
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Input
-                id="seriesId-1"
-                {...register('seriesId')}
-                placeholder="시리즈 ID 입력"
-              />
-              {hasError && <ErrorMessage errorMessage={errorMessage} />}
-            </div>
+            <Input
+              id="seriesId-1"
+              {...register('seriesId')}
+              placeholder="시리즈 ID 입력"
+            />
+            {hasError && <ErrorMessage errorMessage={errorMessage} />}
           </div>
           <DialogFooter>
             <DialogClose asChild>

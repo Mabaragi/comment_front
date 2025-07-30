@@ -24,6 +24,8 @@ import { useLogin } from '../hooks/useAuth';
 import type { LoginCredentials } from '../types/auth';
 import { LoginFormData, loginSchema } from '@/schemas/auth';
 import ErrorMessage from './ErrorMessage';
+import { useState } from 'react';
+import React from 'react';
 
 export default function AuthButtons() {
   const isLoggedIn = useAuthStore((state) => state.accessToken !== null);
@@ -34,6 +36,7 @@ export default function AuthButtons() {
   const isPending = mutation.isPending;
   const handleLogout = () => {
     useAuthStore.getState().clearTokens();
+    useAuthStore.getState().setIsLoggedIn(false);
   };
 
   return (
@@ -51,7 +54,7 @@ export default function AuthButtons() {
         ) : (
           <>
             {/* 로그인 버튼 클릭시 다이얼로그 */}
-            <LoginDialog mutation={mutation} />
+            <MemoizedLoginDialog mutation={mutation} />
             <Button
               className="rounded-full border-zinc-400 text-zinc-700 cursor-pointer"
               variant="outline"
@@ -107,6 +110,7 @@ export default function AuthButtons() {
 }
 
 function LoginDialog({ mutation }: { mutation: ReturnType<typeof useLogin> }) {
+  const [open, setOpen] = useState(false);
   const {
     register,
     handleSubmit,
@@ -114,23 +118,34 @@ function LoginDialog({ mutation }: { mutation: ReturnType<typeof useLogin> }) {
   } = useForm<LoginCredentials>({
     resolver: zodResolver(loginSchema),
   });
-  const handleLogin = (data: LoginFormData) => {
-    mutation.mutate(data);
+  const handleLogin = async (data: LoginFormData) => {
+    try {
+      await mutation.mutateAsync(data);
+      setOpen(false);
+    } catch (error) {
+      // 에러 핸들링 로직 추가 가능
+      console.error('로그인 실패:', error);
+    }
   };
   const isPending = mutation.isPending;
+
+  // 에러 메시지 처리
   const usernameErrorMessage = formErrors.username?.message;
   const hasUsernameError = !!usernameErrorMessage;
   const passwordErrorMessage = formErrors.password?.message;
   const hasPasswordError = !!passwordErrorMessage;
+  const loginErrorMessage = mutation.error?.message;
+  const hasLoginError = !!loginErrorMessage;
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
           className="rounded-full border-zinc-400 text-zinc-700 cursor-pointer"
           variant="outline"
           disabled={isPending}
         >
-          로그인
+          로그인1
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -144,7 +159,7 @@ function LoginDialog({ mutation }: { mutation: ReturnType<typeof useLogin> }) {
           <div className="grid gap-4">
             <Input
               id="username"
-              placeholder="사용자 이름"
+              placeholder="사용자 ID"
               {...register('username')}
             />
             {hasUsernameError && (
@@ -159,6 +174,7 @@ function LoginDialog({ mutation }: { mutation: ReturnType<typeof useLogin> }) {
             {hasPasswordError && (
               <ErrorMessage errorMessage={passwordErrorMessage} />
             )}
+            {hasLoginError && <ErrorMessage errorMessage={loginErrorMessage} />}
           </div>
           <DialogFooter>
             <DialogClose asChild>
@@ -171,3 +187,5 @@ function LoginDialog({ mutation }: { mutation: ReturnType<typeof useLogin> }) {
     </Dialog>
   );
 }
+
+const MemoizedLoginDialog = React.memo(LoginDialog);
