@@ -1,11 +1,12 @@
-import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useMatch, useParams } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 import { VirtuosoGrid } from 'react-virtuoso';
 
 import { useCommentData, type SortOption } from '@/hooks/useCommentData';
 import { useCommentScroll } from '@/hooks/useCommentScroll';
 import CommentHeader from '@/components/CommentHeader';
 import CommentListItem from './CommentListItem';
+import { useSpamFilterStore } from '@/stores/spamFilterStore';
 
 export default function CommentListContainer() {
   const { episodeId } = useParams() as { episodeId: string };
@@ -13,13 +14,34 @@ export default function CommentListContainer() {
 
   // 커스텀 훅으로 로직 분리
   const {
-    comments,
+    comments: rawComments,
     commentCount,
     fetchNextPage,
     hasNextPage,
     isLoading,
     emotionMutation,
   } = useCommentData(episodeId, sort);
+
+  // 댓글 스팸 필터링
+  const { filterOption } = useSpamFilterStore();
+  const comments = useMemo(() => {
+    // 필터링 없음
+    if (filterOption === 'all') return rawComments;
+    // 스팸 필터링
+    if (filterOption === 'notSpam') {
+      return rawComments.filter(
+        (comment) => comment.is_spam !== null && !comment.is_spam,
+      );
+    }
+    // 스팸 보여주기
+    if (filterOption === 'spam') {
+      return rawComments.filter((comment) => comment.is_spam);
+    }
+    // 처리되지 않은 댓글
+    return rawComments.filter(
+      (comment) => !comment.is_ai_processed || comment.is_spam === null,
+    );
+  }, [filterOption, rawComments]);
 
   const { initialTopMostItemIndex, handleRangeChanged } =
     useCommentScroll(episodeId);
