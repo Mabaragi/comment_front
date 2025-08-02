@@ -876,6 +876,11 @@
           "minimum": -2147483648,
           "x-nullable": true
         },
+        "is_spam": {
+          "title": "Is spam",
+          "type": "boolean",
+          "x-nullable": true
+        },
         "is_ai_processed": {
           "title": "Is ai processed",
           "type": "boolean"

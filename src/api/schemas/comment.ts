@@ -49,6 +49,8 @@ export interface Comment {
    * @nullable
    */
   ai_emotion_score?: number | null;
+  /** @nullable */
+  is_spam?: boolean | null;
   is_ai_processed?: boolean;
   /** @nullable */
   ai_processed_at?: string | null;
