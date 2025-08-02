@@ -25,6 +25,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  CommentCount,
   CommentsSummary,
   CrawlerEpisodeCommentList200,
   CrawlerEpisodeCommentListParams,
@@ -241,6 +242,91 @@ export function useCrawlerEpisodeCommentList<TData = Awaited<ReturnType<typeof c
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getCrawlerEpisodeCommentListQueryOptions(productId,params,options)
+
+  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey ;
+
+  return query;
+}
+
+
+
+
+/**
+ * 특정 에피소드의 댓글 개수를 조회합니다.
+ */
+export const crawlerEpisodeCommentCountList = (
+    productId: string,
+ signal?: AbortSignal
+) => {
+      
+      
+      return axiosInstance<CommentCount>(
+      {url: `/crawler/episode/${productId}/comment/count`, method: 'GET', signal
+    },
+      );
+    }
+  
+
+export const getCrawlerEpisodeCommentCountListQueryKey = (productId: string,) => {
+    return [`/crawler/episode/${productId}/comment/count`] as const;
+    }
+
+    
+export const getCrawlerEpisodeCommentCountListQueryOptions = <TData = Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError = ErrorResponse>(productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData>>, }
+) => {
+
+const {query: queryOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCrawlerEpisodeCommentCountListQueryKey(productId);
+
+  
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>> = ({ signal }) => crawlerEpisodeCommentCountList(productId, signal);
+
+      
+
+      
+
+   return  { queryKey, queryFn, enabled: !!(productId), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type CrawlerEpisodeCommentCountListQueryResult = NonNullable<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>>
+export type CrawlerEpisodeCommentCountListQueryError = ErrorResponse
+
+
+export function useCrawlerEpisodeCommentCountList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError = ErrorResponse>(
+ productId: string, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>,
+          TError,
+          Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeCommentCountList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError = ErrorResponse>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>,
+          TError,
+          Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>
+        > , 'initialData'
+      >, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useCrawlerEpisodeCommentCountList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError = ErrorResponse>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData>>, }
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+
+export function useCrawlerEpisodeCommentCountList<TData = Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError = ErrorResponse>(
+ productId: string, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof crawlerEpisodeCommentCountList>>, TError, TData>>, }
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+
+  const queryOptions = getCrawlerEpisodeCommentCountListQueryOptions(productId,options)
 
   const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

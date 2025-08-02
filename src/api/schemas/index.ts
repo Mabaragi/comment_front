@@ -7,6 +7,7 @@
  */
 
 export * from './comment';
+export * from './commentCount';
 export * from './commentEmoticon';
 export * from './commentEmotionAnalysis';
 export * from './commentsSummary';

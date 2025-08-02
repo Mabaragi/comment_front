@@ -160,6 +160,45 @@
         }
       ]
     },
+    "/crawler/episode/{product_id}/comment/count": {
+      "get": {
+        "operationId": "crawler_episode_comment_count_list",
+        "description": "특정 에피소드의 댓글 개수를 조회합니다.",
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "댓글 개수를 조회할 에피소드의 ID",
+            "required": true,
+            "type": "integer",
+            "default": "61823562"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/CommentCount"
+            }
+          },
+          "404": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "tags": ["crawler"]
+      },
+      "parameters": [
+        {
+          "name": "product_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
     "/crawler/episode/{product_id}/comment/crawl": {
       "post": {
         "operationId": "crawler_episode_comment_crawl_create",
@@ -897,6 +936,43 @@
         },
         "episode": {
           "title": "Episode",
+          "type": "integer"
+        }
+      }
+    },
+    "CommentCount": {
+      "required": [
+        "count",
+        "spam_count",
+        "not_spam_count",
+        "unprocessed_count",
+        "episode_id"
+      ],
+      "type": "object",
+      "properties": {
+        "count": {
+          "title": "Count",
+          "description": "댓글 개수",
+          "type": "integer"
+        },
+        "spam_count": {
+          "title": "Spam count",
+          "description": "스팸 댓글 개수",
+          "type": "integer"
+        },
+        "not_spam_count": {
+          "title": "Not spam count",
+          "description": "스팸이 아닌 댓글 개수",
+          "type": "integer"
+        },
+        "unprocessed_count": {
+          "title": "Unprocessed count",
+          "description": "AI 분류가 완료되지 않은 댓글 개수",
+          "type": "integer"
+        },
+        "episode_id": {
+          "title": "Episode id",
+          "description": "에피소드 ID",
           "type": "integer"
         }
       }
